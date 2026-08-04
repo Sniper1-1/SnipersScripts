@@ -1,6 +1,4 @@
-﻿using UnityEditor;
-using UnityEditor.Compilation;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace SnipersScripts.Editor
 {
