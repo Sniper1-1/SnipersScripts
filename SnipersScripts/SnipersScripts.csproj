@@ -60,10 +60,6 @@
         <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Behaviors\" />
-    </ItemGroup>
-
 	<Target Name="NetcodePatch" AfterTargets="PostBuildEvent">
 		<PropertyGroup>
 			<NetcodePatcherDepsListFile>$(IntermediateOutputPath)ncp-deps.list</NetcodePatcherDepsListFile>
