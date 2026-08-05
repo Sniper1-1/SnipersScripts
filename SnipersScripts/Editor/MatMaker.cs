@@ -1,6 +1,6 @@
-﻿using System.IO;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
+using System.IO;
 
 public static class CreateHDRPMaterialsFromTextures
 {
@@ -46,7 +46,7 @@ public static class CreateHDRPMaterialsFromTextures
         Shader shader = Shader.Find(shaderName);
         if (shader == null)
         {
-            UnityEngine.Debug.LogError($"Could not find shader '{shaderName}'. Make sure HDRP is installed and set up in this project.");
+            Debug.LogError($"Could not find shader '{shaderName}'. Make sure HDRP is installed and set up in this project.");
             return;
         }
 
@@ -73,7 +73,7 @@ public static class CreateHDRPMaterialsFromTextures
             }
             else
             {
-                UnityEngine.Debug.LogWarning($"Shader '{shaderName}' has no property '{baseMapProperty}'. Texture not assigned for {textureName}.");
+                Debug.LogWarning($"Shader '{shaderName}' has no property '{baseMapProperty}'. Texture not assigned for {textureName}.");
             }
 
             AssetDatabase.CreateAsset(material, materialPath);
@@ -83,6 +83,6 @@ public static class CreateHDRPMaterialsFromTextures
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
-        UnityEngine.Debug.Log($"Created {createdCount} HDRP material(s) using shader '{shaderName}'.");
+        Debug.Log($"Created {createdCount} HDRP material(s) using shader '{shaderName}'.");
     }
 }
