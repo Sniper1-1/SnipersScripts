@@ -14,7 +14,7 @@ namespace SnipersScripts.Patches
         [HarmonyPatch(typeof(PlayerControllerB), nameof(PlayerControllerB.Update))]
         private static void GetLocalPlayer(PlayerControllerB __instance)
         {
-            if (!__instance.IsOwner) { return; }
+            if (StartOfRound.Instance == null || __instance != StartOfRound.Instance.localPlayerController) { return; }
             TrackPlayerInShip(__instance);
         }
 
