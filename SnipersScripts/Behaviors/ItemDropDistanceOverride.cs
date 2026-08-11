@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using SnipersScripts.Patches;
+﻿using SnipersScripts.Patches;
 using UnityEngine;
 
 namespace SnipersScripts.Behaviors
