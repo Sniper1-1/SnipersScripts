@@ -24,10 +24,10 @@ namespace SnipersScripts.Behaviors
                 if (logType == type.Fatal) { printFatal(log); }
             }
         }
-        public void printDebug(string message) { SnipersScripts.Logger.LogDebug(MESSAGE_STARTER+message); }
-        public void printInfo(string message) { SnipersScripts.Logger.LogInfo(MESSAGE_STARTER+message); }
-        public void printWarning(string message) { SnipersScripts.Logger.LogWarning(MESSAGE_STARTER+message); }
-        public void printError(string message) { SnipersScripts.Logger.LogError(MESSAGE_STARTER+message); }
-        public void printFatal(string message) { SnipersScripts.Logger.LogFatal(MESSAGE_STARTER+message); }
+        public void printDebug(string message) { SnipersScripts.Logger.LogDebug($"{MESSAGE_STARTER}\"{message}\""); }
+        public void printInfo(string message) { SnipersScripts.Logger.LogInfo($"{MESSAGE_STARTER}\"{message}\""); }
+        public void printWarning(string message) { SnipersScripts.Logger.LogWarning($"{MESSAGE_STARTER}\"{message}\""); }
+        public void printError(string message) { SnipersScripts.Logger.LogError($"{MESSAGE_STARTER}\"{message}\""); }
+        public void printFatal(string message) { SnipersScripts.Logger.LogFatal($"{MESSAGE_STARTER}\"{message}\""); }
     }
 }
