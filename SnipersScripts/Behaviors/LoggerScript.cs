@@ -7,13 +7,13 @@ namespace SnipersScripts.Behaviors
     {
         private static readonly string MESSAGE_STARTER = "SnipersScripts' LoggerScript says: ";
 
-        [Tooltip("The message to log to the console on Awake. Left empty, logs can only be printed by calling the print methods from other events.")]
+        [Tooltip("The message to log to the console on Start. Left empty, logs can only be printed by calling the print methods from other events.")]
         public string log=string.Empty;
         [Tooltip("The channel to log message to if log is not empty")]
         public type logType;
         public enum type { Debug, Info, Warning, Error, Fatal }
 
-        private void Awake()
+        private void Start()
         {
             if (!string.IsNullOrEmpty(log))
             {
