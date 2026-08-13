@@ -72,5 +72,14 @@ namespace SnipersScripts.Behaviors
 
             return player.isInHangarShipRoom;
         }
+
+        /// <summary>
+        /// Used to toggle if the detector checks passively or only when manually invoked.
+        /// </summary>
+        /// <param name="passiveCheck">True: the detector will check passively. False: the detector will only check when manually invoked.</param>
+        public void SetPassiveCheck(bool passiveCheck)
+        {
+            checkPassively = passiveCheck;
+        }
     }
 }
