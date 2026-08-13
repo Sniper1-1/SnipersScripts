@@ -12,22 +12,31 @@ namespace SnipersScripts.Behaviors
         [Tooltip("The channel to log message to if log is not empty")]
         public type logType;
         public enum type { Debug, Info, Warning, Error, Fatal }
+        [Tooltip("True: logs `Log` on start through the selected `Log Type` channel. False: logs only on manual invocation.")]
+        public bool logOnStart = true;
 
         private void Start()
         {
+            if(logOnStart) { PrintCurrentLogOnCurrentType(); }
+        }
+        /// <summary>
+        /// Prints whatever is set in the component
+        /// </summary>
+        public void PrintCurrentLogOnCurrentType()
+        {
             if (!string.IsNullOrEmpty(log))
             {
-                if (logType == type.Debug) { printDebug(log); }
-                if (logType == type.Info) { printInfo(log); }
-                if (logType == type.Warning) { printWarning(log); }
-                if (logType == type.Error) { printError(log); }
-                if (logType == type.Fatal) { printFatal(log); }
+                if (logType == type.Debug) { PrintDebug(log); }
+                if (logType == type.Info) { PrintInfo(log); }
+                if (logType == type.Warning) { PrintWarning(log); }
+                if (logType == type.Error) { PrintError(log); }
+                if (logType == type.Fatal) { PrintFatal(log); }
             }
         }
-        public void printDebug(string message) { SnipersScripts.Logger.LogDebug($"{MESSAGE_STARTER}\"{message}\""); }
-        public void printInfo(string message) { SnipersScripts.Logger.LogInfo($"{MESSAGE_STARTER}\"{message}\""); }
-        public void printWarning(string message) { SnipersScripts.Logger.LogWarning($"{MESSAGE_STARTER}\"{message}\""); }
-        public void printError(string message) { SnipersScripts.Logger.LogError($"{MESSAGE_STARTER}\"{message}\""); }
-        public void printFatal(string message) { SnipersScripts.Logger.LogFatal($"{MESSAGE_STARTER}\"{message}\""); }
+        public void PrintDebug(string message) { SnipersScripts.Logger.LogDebug($"{MESSAGE_STARTER}\"{message}\""); }
+        public void PrintInfo(string message) { SnipersScripts.Logger.LogInfo($"{MESSAGE_STARTER}\"{message}\""); }
+        public void PrintWarning(string message) { SnipersScripts.Logger.LogWarning($"{MESSAGE_STARTER}\"{message}\""); }
+        public void PrintError(string message) { SnipersScripts.Logger.LogError($"{MESSAGE_STARTER}\"{message}\""); }
+        public void PrintFatal(string message) { SnipersScripts.Logger.LogFatal($"{MESSAGE_STARTER}\"{message}\""); }
     }
 }
