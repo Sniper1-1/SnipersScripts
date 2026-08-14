@@ -20,6 +20,18 @@ namespace SnipersScripts.Behaviors
         {
             foreach (var ray in raycastOptions) { FireRay(ray); }
         }
+        public void FireRay(int rayIndex) // can be manually called to fire a specific raycast
+        {
+            if (rayIndex >= 0 && rayIndex < raycastOptions.Count)
+            {
+                FireRay(raycastOptions[rayIndex]);
+            }
+            else
+            {
+                SnipersScripts.Logger.LogError($"Index {rayIndex} is not within the bounds of the Raycast Options list on {this.gameObject.name}");
+            }
+        }
+
         public void FireRay(RaycastOptions ray)
         {
             Vector3 rayStartPosition = this.transform.position;
