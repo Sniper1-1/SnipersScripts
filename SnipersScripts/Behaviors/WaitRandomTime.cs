@@ -12,6 +12,8 @@ namespace SnipersScripts.Behaviors
 
         [Tooltip("True, timer starts automatically. False, timer must be started manually.")]
         public bool runOnStart = false;
+        [Tooltip("If true, once a time is chosen between min and max, it will not be re-rolled on subsequent waits.")]
+        public bool onlyRandomizeOnce = false;
 
         [Tooltip("Event to run when the wait starts")]
         public UnityEngine.Events.UnityEvent onWaitStart;
@@ -22,18 +24,17 @@ namespace SnipersScripts.Behaviors
 
         private Coroutine waitCoroutine = null;
         private System.Random random;
+        private bool timeIsLocked = false; // used in sync with onlyRandomizedOnce to determine if a new time needs to be gotten
+        private float currentWaitingTime = 0f;
 
         public void Start()
         {
-            random ??= new(RoundManager.Instance.playersManager.randomMapSeed); //seeds the random number generator with the same seed as round if random is null
-            if (runOnStart)
-            {
-                StartWait();
-            }
+            if (runOnStart) { StartWait(); }
         }
 
         public void StartWait()
         {
+            random ??= new(RoundManager.Instance.playersManager.randomMapSeed + (int)base.transform.position.x + (int)base.transform.position.y + (int)base.transform.position.z); //seeds the random number generator with the same seed as round if random is null (also factoring in the object's position)
             if (minWaitTime > maxWaitTime)
             {
                 SnipersScripts.Logger.LogWarning($"WaitRandomTime: minWaitTime ({minWaitTime}) is greater than maxWaitTime ({maxWaitTime}). Switching values.");
@@ -48,9 +49,22 @@ namespace SnipersScripts.Behaviors
         private System.Collections.IEnumerator Wait()
         {
             onWaitStart?.Invoke();
-            float waitTime = minWaitTime + (float)(random.NextDouble() * (maxWaitTime - minWaitTime)); // generate a random wait time between minWaitTime and maxWaitTime (NextDouble only gives between 0 and 1 so it's multiplied to scale it properly)
-            yield return new WaitForSeconds(waitTime);
+            yield return new WaitForSeconds(GetWaitTime());
             onWaitComplete?.Invoke();
+        }
+
+        /// <summary>
+        /// picks a time between min and max to wait each time called unless onlyRandomizeOnce is true, then it will always return the first rolled wait time
+        /// </summary>
+        /// <returns>the currentWaitingTime</returns>
+        private float GetWaitTime()
+        {
+            if (!timeIsLocked)
+            { 
+                currentWaitingTime = minWaitTime + (float)(random.NextDouble() * (maxWaitTime - minWaitTime)); // generate a random wait time between minWaitTime and maxWaitTime (NextDouble only gives between 0 and 1 so it's multiplied to scale it properly)
+                if (onlyRandomizeOnce) { timeIsLocked = true; }
+            }
+            return currentWaitingTime;
         }
 
         public void StopWait()
