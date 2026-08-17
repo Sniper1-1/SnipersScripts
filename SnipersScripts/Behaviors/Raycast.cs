@@ -70,8 +70,8 @@ namespace SnipersScripts.Behaviors
             if (!initialized)
             {
                 initialized = true;
-                if (distance == 0f) distance = 100f;
-                if (mask.value == 0) mask = 301992193;
+                if (distance == 0f) { distance = 100f; }
+                if (mask.value == 0) { mask = 301992193; }
             }
         }
         public void OnBeforeSerialize() { }
