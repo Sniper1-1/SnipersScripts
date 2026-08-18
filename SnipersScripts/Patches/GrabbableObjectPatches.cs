@@ -20,7 +20,7 @@ namespace SnipersScripts.Patches
         }
 
         [HarmonyTranspiler]
-        private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
+        private static IEnumerable<CodeInstruction> ChangeDropDistanceTranspiler(IEnumerable<CodeInstruction> instructions, MethodBase original)
         {
             var matcher = new CodeMatcher(instructions);
             var originalDropDistance = new CodeMatch(OpCodes.Ldc_R4, VanillaRaycastDistance); // find where vanilla drop distance value is mentioned
