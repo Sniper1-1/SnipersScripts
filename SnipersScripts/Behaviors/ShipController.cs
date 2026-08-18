@@ -16,10 +16,17 @@ namespace SnipersScripts.Behaviors
         public UnityEngine.Events.UnityEvent onMagnetEnable;
         public UnityEngine.Events.UnityEvent onMagnetDisable;
         public UnityEngine.Events.UnityEvent onMagnetToggle;
+        /// <summary>
+        /// Sets the magnets powered state
+        /// </summary>
+        /// <param name="powered">Used to turn magnet on or off</param>
         public void SetMagnetPowered(bool powered)
         {
-            if (powered != StartOfRound.Instance.magnetOn) { CycleMagnetPower(); }
+            if (powered != StartOfRound.Instance.magnetOn) { CycleMagnetPower(); } // only cycle it if its current state isn't what is wanted
         }
+        /// <summary>
+        /// Inverts current magnet state
+        /// </summary>
         public void CycleMagnetPower()
         {
             CycleMagnetPower(true);
