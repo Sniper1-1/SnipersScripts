@@ -36,6 +36,26 @@ namespace SnipersScripts.Behaviors
             StartOfRound.Instance.SetMagnetOn(powered);
             StartOfRound.Instance.magnetLever.TriggerAnimation(StartOfRound.Instance.localPlayerController);
         }
-        
+
+        [Header("ShipFlight")]
+        public UnityEngine.Events.UnityEvent onShipDescend;
+        public UnityEngine.Events.UnityEvent onShipLand;
+        public UnityEngine.Events.UnityEvent onShipAscend;
+        public UnityEngine.Events.UnityEvent onShipEnterOrbit;
+        public void ShipTakeoff()
+        {
+            FindFirstObjectByType<StartMatchLever>().LeverAnimation();
+            StartOfRound.Instance.ShipLeave();            
+        }
+        public void ShipLand()
+        {
+            FindFirstObjectByType<StartMatchLever>().LeverAnimation();
+            StartOfRound.Instance.StartGame();            
+        }
+        public void ShipFlightToggle()
+        {
+            if (StartOfRound.Instance.shipHasLanded) { ShipTakeoff(); }
+            else { ShipLand(); }
+        }
     }
 }
