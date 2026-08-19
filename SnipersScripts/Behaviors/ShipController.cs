@@ -48,16 +48,30 @@ namespace SnipersScripts.Behaviors
         /// </summary>
         public void ShipTakeoff()
         {
-            FindFirstObjectByType<StartMatchLever>().LeverAnimation();
-            StartOfRound.Instance.ShipLeave();            
+            if (FindFirstObjectByType<StartMatchLever>().triggerScript.interactable)
+            {
+                FindFirstObjectByType<StartMatchLever>().LeverAnimation();
+                StartOfRound.Instance.ShipLeave(); 
+            }
+            else
+            {
+                SnipersScripts.Logger.LogWarning("Tried to take off when ship lever can't be pulled. Cancelling action.");
+            }         
         }
         /// <summary>
         /// Makes the ship land
         /// </summary>
         public void ShipLand()
         {
-            FindFirstObjectByType<StartMatchLever>().LeverAnimation();
-            StartOfRound.Instance.StartGame();            
+            if (FindFirstObjectByType<StartMatchLever>().triggerScript.interactable)
+            {
+                FindFirstObjectByType<StartMatchLever>().LeverAnimation();
+                StartOfRound.Instance.StartGame();
+            }
+            else
+            {
+                SnipersScripts.Logger.LogWarning("Tried to land when ship lever can't be pulled. Cancelling action.");
+            }
         }
         /// <summary>
         /// Makes the ship land or takeoff (whichever it isn't currently)
