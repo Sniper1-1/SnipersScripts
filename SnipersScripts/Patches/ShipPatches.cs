@@ -58,14 +58,14 @@ namespace SnipersScripts.Patches
         }
         [HarmonyPostfix]
         [HarmonyPatch(typeof(HUDManager), nameof(HUDManager.ReadOutDialogue))]
-        private static void WrapDialogueCoroutine(ref IEnumerator __result)
+        private static void EndShipMessage(ref IEnumerator __result)
         {
-            __result = WrapWithEndEvent(__result);
+            __result = WaitForEnd(__result);
         }
         // used to successfully wait for the end of the coroutine before invoking the events
-        private static IEnumerator WrapWithEndEvent(IEnumerator original)
+        private static IEnumerator WaitForEnd(IEnumerator original)
         {
-            while (original.MoveNext()) { yield return original.Current; }
+            while (original.MoveNext()) { yield return original.Current; } // waits for all the yields in the original
             foreach (ShipController controller in ShipController.ActiveControllers) { controller.onShipMessageEnd.Invoke(); }
         }
 
