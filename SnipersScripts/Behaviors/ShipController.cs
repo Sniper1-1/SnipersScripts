@@ -13,7 +13,7 @@ namespace SnipersScripts.Behaviors
         private void OnEnable() { ActiveControllers.Add(this); }
         private void OnDisable() { ActiveControllers.Remove(this); }
 
-        [Header("Magnet")]
+        [Header("Ship Magnet")]
         public UnityEngine.Events.UnityEvent onMagnetEnable;
         public UnityEngine.Events.UnityEvent onMagnetDisable;
         public UnityEngine.Events.UnityEvent onMagnetToggle;
@@ -122,5 +122,10 @@ namespace SnipersScripts.Behaviors
         {
             StartOfRound.Instance.DisableShipSpeaker();
         }
+
+        [Header("Ship Doors")]
+        public UnityEngine.Events.UnityEvent onDoorOpen;
+        public UnityEngine.Events.UnityEvent onDoorClose;
+        public UnityEngine.Events.UnityEvent onDoorToggle;
     }
 }

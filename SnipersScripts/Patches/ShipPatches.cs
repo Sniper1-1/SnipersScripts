@@ -76,5 +76,27 @@ namespace SnipersScripts.Patches
         {
             foreach (ShipController controller in ShipController.ActiveControllers) { controller.onSpeakerMute.Invoke(); }
         }
+
+        // ship doors
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(HangarShipDoor), nameof(HangarShipDoor.SetDoorClosed))]
+        private static void DoorClosed()
+        {
+            foreach (ShipController controller in ShipController.ActiveControllers) 
+            { 
+                controller.onDoorClose.Invoke(); 
+                controller.onDoorToggle.Invoke();
+            }
+        }
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(HangarShipDoor), nameof(HangarShipDoor.SetDoorOpen))]
+        private static void DoorOpened()
+        {
+            foreach (ShipController controller in ShipController.ActiveControllers) 
+            { 
+                controller.onDoorOpen.Invoke();
+                controller.onDoorToggle.Invoke();
+            }
+        }
     }
 }
