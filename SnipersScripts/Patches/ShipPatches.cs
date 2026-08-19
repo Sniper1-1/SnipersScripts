@@ -47,5 +47,13 @@ namespace SnipersScripts.Patches
         {
             foreach (ShipController controller in ShipController.ActiveControllers) { controller.onShipDescend.Invoke(); }
         }
+
+        // ship speaker
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.DisableShipSpeakerLocalClient))]
+        private static void SpeakerMute()
+        {
+            foreach (ShipController controller in ShipController.ActiveControllers) { controller.onSpeakerMute.Invoke(); }
+        }
     }
 }

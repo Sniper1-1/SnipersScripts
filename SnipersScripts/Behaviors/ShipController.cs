@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using GameNetcodeStuff;
+using SnipersScripts.Editor;
 using UnityEngine;
 
 namespace SnipersScripts.Behaviors
@@ -37,25 +38,70 @@ namespace SnipersScripts.Behaviors
             StartOfRound.Instance.magnetLever.TriggerAnimation(StartOfRound.Instance.localPlayerController);
         }
 
-        [Header("ShipFlight")]
+        [Header("Ship Flight")]
         public UnityEngine.Events.UnityEvent onShipDescend;
         public UnityEngine.Events.UnityEvent onShipLand;
         public UnityEngine.Events.UnityEvent onShipAscend;
         public UnityEngine.Events.UnityEvent onShipEnterOrbit;
+        /// <summary>
+        /// Makes the ship take off
+        /// </summary>
         public void ShipTakeoff()
         {
             FindFirstObjectByType<StartMatchLever>().LeverAnimation();
             StartOfRound.Instance.ShipLeave();            
         }
+        /// <summary>
+        /// Makes the ship land
+        /// </summary>
         public void ShipLand()
         {
             FindFirstObjectByType<StartMatchLever>().LeverAnimation();
             StartOfRound.Instance.StartGame();            
         }
+        /// <summary>
+        /// Makes the ship land or takeoff (whichever it isn't currently)
+        /// </summary>
         public void ShipFlightToggle()
         {
             if (StartOfRound.Instance.shipHasLanded) { ShipTakeoff(); }
             else { ShipLand(); }
+        }
+
+        [Header("Ship Messages")]
+        [Tooltip("The alerts like the ones that appear when the ship leaves at midnight.")]
+        public DialogueSegment[] shipMessage;
+        /// <summary>
+        /// Displays message on the component like the one that plays when the ship leaves at midnight.
+        /// </summary>
+        public void BroadcastShipMessage()
+        {
+            HUDManager.Instance.ReadDialogue(shipMessage);
+        }
+        /// <summary>
+        /// Displays message in the provided scriptable object like the one that plays when the ship leaves at midnight.
+        /// </summary>
+        /// <param name="message">The scriptable object to pull the message from.</param>
+        public void BroadcastShipMessage(ShipMessageSO message)
+        {
+            HUDManager.Instance.ReadDialogue(message.shipMessage);
+        }
+        
+        public UnityEngine.Events.UnityEvent onSpeakerMute;
+        /// <summary>
+        /// Plays the provided audio clip on the ship speaker
+        /// </summary>
+        /// <param name="audioClip">The audio to play over the ship speaker.</param>
+        public void PlayAudioOverSpeaker(AudioClip audioClip)
+        {
+            StartOfRound.Instance.speakerAudioSource.PlayOneShot(audioClip);
+        }
+        /// <summary>
+        /// Stops the ship speaker
+        /// </summary>
+        public void StopAudioOverSpeaker()
+        {
+            StartOfRound.Instance.DisableShipSpeaker();
         }
     }
 }
