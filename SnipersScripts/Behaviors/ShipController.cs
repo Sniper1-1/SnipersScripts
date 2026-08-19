@@ -71,6 +71,10 @@ namespace SnipersScripts.Behaviors
         [Header("Ship Messages")]
         [Tooltip("The alerts like the ones that appear when the ship leaves at midnight.")]
         public DialogueSegment[] shipMessage;
+        [Tooltip("Events that trigger when a ship message starts")]
+        public UnityEngine.Events.UnityEvent onShipMessageStart;
+        [Tooltip("Events that trigger when a ship message ends")]
+        public UnityEngine.Events.UnityEvent onShipMessageEnd;
         /// <summary>
         /// Displays message on the component like the one that plays when the ship leaves at midnight.
         /// </summary>
@@ -86,7 +90,8 @@ namespace SnipersScripts.Behaviors
         {
             HUDManager.Instance.ReadDialogue(message.shipMessage);
         }
-        
+
+        [Tooltip("Invokes when the ship speaker is muted")]
         public UnityEngine.Events.UnityEvent onSpeakerMute;
         /// <summary>
         /// Plays the provided audio clip on the ship speaker

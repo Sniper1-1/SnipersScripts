@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using SnipersScripts.Behaviors;
+using System.Collections;
 
 namespace SnipersScripts.Patches
 {
@@ -46,6 +47,26 @@ namespace SnipersScripts.Patches
         private static void ShipDescend()
         {
             foreach (ShipController controller in ShipController.ActiveControllers) { controller.onShipDescend.Invoke(); }
+        }
+
+        // ship messages
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(HUDManager), nameof(HUDManager.ReadOutDialogue))]
+        private static void StartShipMessage()
+        {
+            foreach (ShipController controller in ShipController.ActiveControllers) { controller.onShipMessageStart.Invoke(); }
+        }
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(HUDManager), nameof(HUDManager.ReadOutDialogue))]
+        private static void WrapDialogueCoroutine(ref IEnumerator __result)
+        {
+            __result = WrapWithEndEvent(__result);
+        }
+        // used to successfully wait for the end of the coroutine before invoking the events
+        private static IEnumerator WrapWithEndEvent(IEnumerator original)
+        {
+            while (original.MoveNext()) { yield return original.Current; }
+            foreach (ShipController controller in ShipController.ActiveControllers) { controller.onShipMessageEnd.Invoke(); }
         }
 
         // ship speaker
