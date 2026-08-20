@@ -127,5 +127,24 @@ namespace SnipersScripts.Behaviors
         public UnityEngine.Events.UnityEvent onDoorOpen;
         public UnityEngine.Events.UnityEvent onDoorClose;
         public UnityEngine.Events.UnityEvent onDoorToggle;
+        public void OpenShipDoor()
+        {
+            FindFirstObjectByType<HangarShipDoor>().PlayDoorAnimation(false);
+        }
+        public void CloseShipDoor()
+        {
+            FindFirstObjectByType<HangarShipDoor>().PlayDoorAnimation(true);
+        }
+        public void ToggleShipDoor()
+        {
+            if (FindFirstObjectByType<HangarShipDoor>().shipDoorsAnimator.GetBool("Closed") == true)
+            {
+                OpenShipDoor();
+            }
+            else
+            {
+                CloseShipDoor();
+            }
+        }
     }
 }
