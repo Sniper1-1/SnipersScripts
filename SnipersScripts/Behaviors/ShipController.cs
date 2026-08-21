@@ -23,16 +23,16 @@ namespace SnipersScripts.Behaviors
         /// <param name="powered">Used to turn magnet on or off</param>
         public void SetMagnetPowered(bool powered)
         {
-            if (powered != StartOfRound.Instance.magnetOn) { CycleMagnetPower(); } // only cycle it if its current state isn't what is wanted
+            if (powered != StartOfRound.Instance.magnetOn) { ToggleMagnetPower(); } // only cycle it if its current state isn't what is wanted
         }
         /// <summary>
         /// Inverts current magnet state
         /// </summary>
-        public void CycleMagnetPower()
+        public void ToggleMagnetPower()
         {
-            CycleMagnetPower(true);
+            ToggleMagnetPower(true);
         }
-        private void CycleMagnetPower(bool powered)
+        private void ToggleMagnetPower(bool powered)
         {
             StartOfRound.Instance.SetMagnetOn(powered);
             StartOfRound.Instance.magnetLever.TriggerAnimation(StartOfRound.Instance.localPlayerController);
@@ -44,42 +44,42 @@ namespace SnipersScripts.Behaviors
         public UnityEngine.Events.UnityEvent onShipAscend;
         public UnityEngine.Events.UnityEvent onShipEnterOrbit;
         /// <summary>
-        /// Makes the ship take off
+        /// Used to make ship take off or land
         /// </summary>
-        public void ShipTakeoff()
+        /// <param name="land"> if true, lands the ship if it can land. If false, takes off if it can.</param>
+        public void SetShipLanded(bool land)
         {
-            if (FindFirstObjectByType<StartMatchLever>().triggerScript.interactable)
+            if (land != StartOfRound.Instance.shipHasLanded)
             {
-                FindFirstObjectByType<StartMatchLever>().LeverAnimation();
-                StartOfRound.Instance.ShipLeave(); 
-            }
-            else
-            {
-                SnipersScripts.Logger.LogWarning("Tried to take off when ship lever can't be pulled. Cancelling action.");
-            }         
-        }
-        /// <summary>
-        /// Makes the ship land
-        /// </summary>
-        public void ShipLand()
-        {
-            if (FindFirstObjectByType<StartMatchLever>().triggerScript.interactable)
-            {
-                FindFirstObjectByType<StartMatchLever>().LeverAnimation();
-                StartOfRound.Instance.StartGame();
-            }
-            else
-            {
-                SnipersScripts.Logger.LogWarning("Tried to land when ship lever can't be pulled. Cancelling action.");
-            }
+                ToggleShipFlight(); 
+            } 
         }
         /// <summary>
         /// Makes the ship land or takeoff (whichever it isn't currently)
         /// </summary>
-        public void ShipFlightToggle()
+        public void ToggleShipFlight()
         {
-            if (StartOfRound.Instance.shipHasLanded) { ShipTakeoff(); }
-            else { ShipLand(); }
+            ToggleShipFlight(!StartOfRound.Instance.shipHasLanded);
+        }
+        private void ToggleShipFlight(bool land)
+        {
+            if (FindFirstObjectByType<StartMatchLever>().triggerScript.interactable)
+            {
+                if (land)
+                {
+                    FindFirstObjectByType<StartMatchLever>().LeverAnimation();
+                    StartOfRound.Instance.StartGame();
+                }
+                else
+                {
+                    FindFirstObjectByType<StartMatchLever>().LeverAnimation();
+                    StartOfRound.Instance.ShipLeave();
+                }
+            }
+            else
+            {
+                SnipersScripts.Logger.LogWarning("Tried to move ship when lever can't be pulled. Cancelling action.");
+            }
         }
 
         [Header("Ship Messages")]
