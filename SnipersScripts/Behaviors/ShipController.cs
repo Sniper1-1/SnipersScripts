@@ -81,7 +81,7 @@ namespace SnipersScripts.Behaviors
             }
         }
 
-        [Header("Ship Messages")]
+        [Header("Ship Communication")]
         [Tooltip("The alerts like the ones that appear when the ship leaves at midnight.")]
         public DialogueSegment[] shipMessage;
         [Tooltip("Events that trigger when a ship message starts")]
@@ -112,8 +112,8 @@ namespace SnipersScripts.Behaviors
         /// <param name="audioClip">The audio to play over the ship speaker. Mutes ship speaker if null.</param>
         public void SetShipSpeakerAudio(AudioClip audioClip)
         {
-            if (audioClip != null) { StartOfRound.Instance.speakerAudioSource.PlayOneShot(audioClip); }
-            else { StartOfRound.Instance.DisableShipSpeaker(); }
+            if (audioClip != null && !StartOfRound.Instance.speakerAudioSource.isPlaying) { StartOfRound.Instance.speakerAudioSource.PlayOneShot(audioClip); }
+            else if (audioClip == null && StartOfRound.Instance.speakerAudioSource.isPlaying) { StartOfRound.Instance.DisableShipSpeaker(); }
         }
 
         [Header("Ship Doors")]
