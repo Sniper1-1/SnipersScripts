@@ -156,25 +156,29 @@ namespace SnipersScripts.Behaviors
         public UnityEngine.Events.UnityEvent onScreenTurnOff;
         public UnityEngine.Events.UnityEvent onScreenPoweredToggle;
         public UnityEngine.Events.UnityEvent onScreenSpectatorToggle;
-        public void TurnScreenOn()
+        /// <summary>
+        /// Sets screen powered state
+        /// </summary>
+        /// <param name="powered">If true, turns on screen if not already on. If false, turns screen off if not already off.</param>
+        public void SetScreenOn(bool powered)
         {
-            StartOfRound.Instance.mapScreen.SwitchScreenOn(true);
+            if (powered != StartOfRound.Instance.mapScreen.isScreenOn) { ToggleScreenPower(); }
         }
-        public void TurnScreenOff()
-        {
-            StartOfRound.Instance.mapScreen.SwitchScreenOn(false);
-        }
+        /// <summary>
+        /// Inverts screen powered state
+        /// </summary>
         public void ToggleScreenPower()
         {
-            if (StartOfRound.Instance.mapScreen.isScreenOn)
-            {
-                TurnScreenOff();
-            }
-            else
-            {
-                TurnScreenOn();
-            }
+            ToggleScreenPower(!StartOfRound.Instance.mapScreen.isScreenOn);
         }
+        private void ToggleScreenPower(bool power)
+        {
+            if (power) { StartOfRound.Instance.mapScreen.SwitchScreenOn(true); }
+            else { StartOfRound.Instance.mapScreen.SwitchScreenOn(false); }
+        }
+        /// <summary>
+        /// Switches who the monitor is spectating
+        /// </summary>
         public void SwitchScreenSpectatorToggle()
         {
             StartOfRound.Instance.mapScreen.SwitchRadarTargetForward(true);
