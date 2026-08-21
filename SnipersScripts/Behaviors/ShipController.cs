@@ -108,19 +108,13 @@ namespace SnipersScripts.Behaviors
         [Tooltip("Invokes when the ship speaker is muted")]
         public UnityEngine.Events.UnityEvent onSpeakerMute;
         /// <summary>
-        /// Plays the provided audio clip on the ship speaker
+        /// Plays the provided audio clip on the ship speaker, muting the speaker if clip is null
         /// </summary>
-        /// <param name="audioClip">The audio to play over the ship speaker.</param>
-        public void PlayAudioOverSpeaker(AudioClip audioClip)
+        /// <param name="audioClip">The audio to play over the ship speaker. Mutes ship speaker if null.</param>
+        public void SetShipSpeakerAudio(AudioClip audioClip)
         {
-            StartOfRound.Instance.speakerAudioSource.PlayOneShot(audioClip);
-        }
-        /// <summary>
-        /// Stops the ship speaker
-        /// </summary>
-        public void StopAudioOverSpeaker()
-        {
-            StartOfRound.Instance.DisableShipSpeaker();
+            if (audioClip != null) { StartOfRound.Instance.speakerAudioSource.PlayOneShot(audioClip); }
+            else { StartOfRound.Instance.DisableShipSpeaker(); }
         }
 
         [Header("Ship Doors")]
