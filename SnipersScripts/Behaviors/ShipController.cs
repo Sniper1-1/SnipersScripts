@@ -137,7 +137,7 @@ namespace SnipersScripts.Behaviors
         }
         public void ToggleShipDoor()
         {
-            if (FindFirstObjectByType<HangarShipDoor>().shipDoorsAnimator.GetBool("Closed") == true)
+            if (FindFirstObjectByType<HangarShipDoor>().shipDoorsAnimator.GetBool("Closed"))
             {
                 OpenShipDoor();
             }
@@ -145,6 +145,35 @@ namespace SnipersScripts.Behaviors
             {
                 CloseShipDoor();
             }
+        }
+
+        [Header("Map Radar")]
+        public UnityEngine.Events.UnityEvent onScreenTurnOn;
+        public UnityEngine.Events.UnityEvent onScreenTurnOff;
+        public UnityEngine.Events.UnityEvent onScreenPoweredToggle;
+        public UnityEngine.Events.UnityEvent onScreenSpectatorToggle;
+        public void TurnScreenOn()
+        {
+            StartOfRound.Instance.mapScreen.SwitchScreenOn(true);
+        }
+        public void TurnScreenOff()
+        {
+            StartOfRound.Instance.mapScreen.SwitchScreenOn(false);
+        }
+        public void ToggleScreenPower()
+        {
+            if (StartOfRound.Instance.mapScreen.isScreenOn)
+            {
+                TurnScreenOff();
+            }
+            else
+            {
+                TurnScreenOn();
+            }
+        }
+        public void SwitchScreenSpectatorToggle()
+        {
+            StartOfRound.Instance.mapScreen.SwitchRadarTargetForward(true);
         }
     }
 }

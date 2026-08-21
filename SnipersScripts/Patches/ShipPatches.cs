@@ -98,5 +98,27 @@ namespace SnipersScripts.Patches
                 controller.onDoorToggle.Invoke();
             }
         }
+
+        // radar screen
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(ManualCameraRenderer),nameof(ManualCameraRenderer.SwitchRadarTargetForward))]
+        private static void SwitchSpectateTarget()
+        {
+            foreach (ShipController controller in ShipController.ActiveControllers) { controller.onScreenSpectatorToggle.Invoke(); }
+        }
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(ManualCameraRenderer),nameof(ManualCameraRenderer.SwitchScreenOn))]
+        private static void CheckScreenPowered(bool on)
+        {
+            if (on)
+            {
+                foreach (ShipController controller in ShipController.ActiveControllers) { controller.onScreenTurnOn.Invoke(); }
+            }
+            else
+            {
+                foreach (ShipController controller in ShipController.ActiveControllers) { controller.onScreenTurnOff.Invoke(); }
+            }
+            foreach (ShipController controller in ShipController.ActiveControllers) { controller.onScreenPoweredToggle.Invoke(); }
+        }
     }
 }
