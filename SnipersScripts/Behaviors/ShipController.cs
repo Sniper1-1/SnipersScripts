@@ -127,24 +127,28 @@ namespace SnipersScripts.Behaviors
         public UnityEngine.Events.UnityEvent onDoorOpen;
         public UnityEngine.Events.UnityEvent onDoorClose;
         public UnityEngine.Events.UnityEvent onDoorToggle;
-        public void OpenShipDoor()
+        /// <summary>
+        /// Sets the door open/close state
+        /// </summary>
+        /// <param name="open"> If true, sets door to be open if not already. If false, closes door if not already</param>
+        public void SetShipDoorOpen(bool open)
         {
-            FindFirstObjectByType<HangarShipDoor>().PlayDoorAnimation(false);
+            if (open == FindFirstObjectByType<HangarShipDoor>().shipDoorsAnimator.GetBool("Closed"))
+            {
+                ToggleShipDoor();
+            }
         }
-        public void CloseShipDoor()
-        {
-            FindFirstObjectByType<HangarShipDoor>().PlayDoorAnimation(true);
-        }
+        /// <summary>
+        /// Inverts the current door open/close state
+        /// </summary>
         public void ToggleShipDoor()
         {
-            if (FindFirstObjectByType<HangarShipDoor>().shipDoorsAnimator.GetBool("Closed"))
-            {
-                OpenShipDoor();
-            }
-            else
-            {
-                CloseShipDoor();
-            }
+            ToggleShipDoor(!FindFirstObjectByType<HangarShipDoor>().shipDoorsAnimator.GetBool("Closed"));
+        }
+        private void ToggleShipDoor(bool powered)
+        {
+            if (powered) { FindFirstObjectByType<HangarShipDoor>().PlayDoorAnimation(true); }
+            else { FindFirstObjectByType<HangarShipDoor>().PlayDoorAnimation(false); }
         }
 
         [Header("Map Radar")]
