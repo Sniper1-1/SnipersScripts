@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using GameNetcodeStuff;
 using SnipersScripts.Editor;
 using UnityEngine;
 
@@ -176,6 +175,53 @@ namespace SnipersScripts.Behaviors
         public void SwitchScreenSpectatorToggle()
         {
             StartOfRound.Instance.mapScreen.SwitchRadarTargetForward(true);
+        }
+
+        [Header("Teleporters")]
+        public UnityEngine.Events.UnityEvent onTeleportStart;
+        public UnityEngine.Events.UnityEvent onTeleportEnd;
+        public UnityEngine.Events.UnityEvent onInverseStart;
+        public UnityEngine.Events.UnityEvent onInverseEnd;
+        private ShipTeleporter teleporterNormal = null;
+        private ShipTeleporter teleporterInverse = null;
+        /// <summary>
+        /// Used to activate the normal (if false) or inverse (if true) teleporter
+        /// </summary>
+        /// <param name="inverse">False: normal teleporter. True: inverse teleporter.</param>
+        public void TeleportPlayer(bool inverse)
+        {
+            if ((!inverse && teleporterNormal == null ) || (inverse && teleporterInverse == null))
+            {
+                if (!FindShipUpgrade<ShipTeleporter>(inverseTeleporter: inverse))
+                {
+                    SnipersScripts.Logger.LogWarning("Tried to use non-existing teleporter. Cancelling.");
+                    return;
+                }
+            }
+            if (!inverse && teleporterNormal.buttonTrigger.interactable) { teleporterNormal?.PressTeleportButtonOnLocalClient(); }
+            else if (inverse && teleporterInverse.buttonTrigger.interactable) { teleporterInverse?.PressTeleportButtonOnLocalClient(); }
+        }
+
+        //-------------------------------------------------------------------------------
+
+        /// <summary>
+        /// Generic function used to find various ship upgrade classes
+        /// </summary>
+        /// <typeparam name="T">Used to locate the specific type of ship upgrade</typeparam>
+        /// <param name="inverseTeleporter">True if teleporter is inverse teleporter, false if regular teleporter</param>
+        /// <returns></returns>
+        private bool FindShipUpgrade<T>(bool inverseTeleporter = false)
+        {
+            if(typeof(T) == typeof(ShipTeleporter))
+            {
+                ShipTeleporter[] possibleTeleports = FindObjectsByType<ShipTeleporter>(FindObjectsSortMode.None);
+                foreach (ShipTeleporter teleporter in possibleTeleports)
+                {
+                    if (inverseTeleporter && teleporter.isInverseTeleporter) { teleporterInverse =  teleporter; return true; }
+                    else if (!inverseTeleporter && !teleporter.isInverseTeleporter) { teleporterNormal = teleporter; return true; }
+                }
+            }
+            return false;
         }
     }
 }

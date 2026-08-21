@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using SnipersScripts.Behaviors;
+using System;
 using System.Collections;
 
 namespace SnipersScripts.Patches
@@ -60,13 +61,7 @@ namespace SnipersScripts.Patches
         [HarmonyPatch(typeof(HUDManager), nameof(HUDManager.ReadOutDialogue))]
         private static void EndShipMessage(ref IEnumerator __result)
         {
-            __result = WaitForEnd(__result);
-        }
-        // used to successfully wait for the end of the coroutine before invoking the events
-        private static IEnumerator WaitForEnd(IEnumerator original)
-        {
-            while (original.MoveNext()) { yield return original.Current; } // waits for all the yields in the original
-            foreach (ShipController controller in ShipController.ActiveControllers) { controller.onShipMessageEnd.Invoke(); }
+            __result = WaitForEnd(__result, () => { foreach (ShipController controller in ShipController.ActiveControllers) { controller.onShipMessageEnd.Invoke(); } });
         }
 
         // ship speaker
@@ -119,6 +114,41 @@ namespace SnipersScripts.Patches
                 foreach (ShipController controller in ShipController.ActiveControllers) { controller.onScreenTurnOff.Invoke(); }
             }
             foreach (ShipController controller in ShipController.ActiveControllers) { controller.onScreenPoweredToggle.Invoke(); }
+        }
+
+        // teleporters
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(ShipTeleporter), nameof(ShipTeleporter.beamUpPlayer))]
+        private static void TeleportNormal()
+        {
+            foreach (ShipController controller in ShipController.ActiveControllers) { controller.onTeleportStart.Invoke(); }
+        }
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(ShipTeleporter), nameof(ShipTeleporter.beamOutPlayer))]
+        private static void TeleportInverse()
+        {
+            foreach (ShipController controller in ShipController.ActiveControllers) { controller.onInverseStart.Invoke(); }
+        }
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(ShipTeleporter), nameof(ShipTeleporter.beamUpPlayer))]
+        private static void TeleportEnd(ref IEnumerator __result)
+        {
+            __result = WaitForEnd(__result, () => { foreach (ShipController controller in ShipController.ActiveControllers) { controller.onTeleportEnd.Invoke(); } });
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(ShipTeleporter), nameof(ShipTeleporter.beamOutPlayer))]
+        private static void InverseEnd(ref IEnumerator __result)
+        {
+            __result = WaitForEnd(__result, () => { foreach (ShipController controller in ShipController.ActiveControllers) { controller.onInverseEnd.Invoke(); } });
+        }
+
+        // coroutine helping
+        // used to successfully wait for the end of the coroutine before invoking the events
+        private static IEnumerator WaitForEnd(IEnumerator original, Action callback)
+        {
+            while (original.MoveNext()) { yield return original.Current; } // waits for all the yields in the original
+            callback?.Invoke();
         }
     }
 }
