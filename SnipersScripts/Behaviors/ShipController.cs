@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using SnipersScripts.Editor;
 using UnityEngine;
 
@@ -123,7 +124,7 @@ namespace SnipersScripts.Behaviors
         {
             if (signalTranslator == null)
             {
-                if (!FindShipUpgrade<SignalTranslator>())
+                if (!FindShipComponent<SignalTranslator>())
                 {
                     SnipersScripts.Logger.LogWarning("Tried to transmit over nonexisting transmitter. Cancelling.");
                     return;
@@ -135,21 +136,21 @@ namespace SnipersScripts.Behaviors
         public UnityEngine.Events.UnityEvent onHornPull;
         public UnityEngine.Events.UnityEvent whileHornPulled;
         public UnityEngine.Events.UnityEvent onHornRelease;
-        private ShipAlarmCord horn = null;
+        private ShipAlarmCord shipHorn = null;
         /// <summary>
         /// Pulls the ship horn if it exists
         /// </summary>
         public void PullHorn()
         {
-            if (horn == null)
+            if (shipHorn == null)
             {
-                if (!FindShipUpgrade<ShipAlarmCord>())
+                if (!FindShipComponent<ShipAlarmCord>())
                 {
                     SnipersScripts.Logger.LogWarning("Tried to use non-existing horn. Cancelling.");
                     return;
                 }
             }
-            horn?.HoldCordDown();
+            shipHorn?.HoldCordDown();
         }
 
         [Header("Ship Doors")]
@@ -228,7 +229,7 @@ namespace SnipersScripts.Behaviors
         {
             if ((!inverse && teleporterNormal == null ) || (inverse && teleporterInverse == null))
             {
-                if (!FindShipUpgrade<ShipTeleporter>(inverseTeleporter: inverse))
+                if (!FindShipComponent<ShipTeleporter>(inverseTeleporter: inverse))
                 {
                     SnipersScripts.Logger.LogWarning("Tried to use non-existing teleporter. Cancelling.");
                     return;
@@ -243,14 +244,14 @@ namespace SnipersScripts.Behaviors
         /// <summary>
         /// Generic function used to find various ship upgrade classes
         /// </summary>
-        /// <typeparam name="T">Used to locate the specific type of ship upgrade</typeparam>
+        /// <typeparam name="T">Used to locate the specific type of ship component</typeparam>
         /// <param name="inverseTeleporter">True if teleporter is inverse teleporter, false if regular teleporter</param>
         /// <returns></returns>
-        private bool FindShipUpgrade<T>(bool inverseTeleporter = false)
+        private bool FindShipComponent<T>(bool inverseTeleporter = false)
         {
             if(typeof(T) == typeof(ShipTeleporter))
             {
-                ShipTeleporter[] possibleTeleports = FindObjectsByType<ShipTeleporter>(FindObjectsSortMode.None);
+                List<ShipTeleporter> possibleTeleports = FindObjectsInSampleScene<ShipTeleporter>();
                 foreach (ShipTeleporter teleporter in possibleTeleports)
                 {
                     if (inverseTeleporter && teleporter.isInverseTeleporter) { teleporterInverse =  teleporter; return true; }
@@ -258,16 +259,36 @@ namespace SnipersScripts.Behaviors
                 }
             }
             if (typeof(T) == typeof(SignalTranslator)) 
-            { 
-                signalTranslator = FindFirstObjectByType<SignalTranslator>();
-                if (signalTranslator != null) { return true; } 
+            {
+                foreach (SignalTranslator translator in FindObjectsInSampleScene<SignalTranslator>())
+                {
+                    signalTranslator = translator;
+                    if (signalTranslator != null) { return true; } 
+                }                
             }
             if (typeof(T) == typeof(ShipAlarmCord))
             {
-                horn = FindFirstObjectByType<ShipAlarmCord>();
-                if (horn != null) { return true; }
+                foreach (ShipAlarmCord horn in FindObjectsInSampleScene<ShipAlarmCord>())
+                {
+                    shipHorn = horn;
+                    if (shipHorn != null) { return true; }
+                }
             }
             return false;
+        }
+        /// <summary>
+        /// Used to get only ship upgrade components out of SampleSceneRelay in case for whatever reason a moon has them
+        /// </summary>
+        /// <typeparam name="T">Used to locate the specific type of ship component</typeparam>
+        /// <returns></returns>
+        private List<T> FindObjectsInSampleScene<T>() where T : Component // where T : Component ensures T is a component
+        {
+            List<T> possibleComponents = FindObjectsByType<T>(FindObjectsInactive.Include, FindObjectsSortMode.None).ToList();
+            foreach (T component in possibleComponents)
+            {
+                if(component.gameObject.scene.name != "SampleSceneRelay") { possibleComponents.Remove(component); }
+            }
+            return possibleComponents;
         }
     }
 }
