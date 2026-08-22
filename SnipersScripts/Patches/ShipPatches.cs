@@ -157,6 +157,26 @@ namespace SnipersScripts.Patches
             __result = WaitForEnd(__result, () => { foreach (ShipController controller in ShipController.ActiveControllers) { controller.onSignalTransmitEnd.Invoke(); } });
         }
 
+        // ship horn
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(ShipAlarmCord), nameof(ShipAlarmCord.PullCordServerRpc))]
+        private static void StartHorn()
+        {
+            foreach (ShipController controller in ShipController.ActiveControllers) { controller.onHornPull.Invoke(); }
+        }
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(ShipAlarmCord), nameof(ShipAlarmCord.HoldCordDown))]
+        private static void HoldCord()
+        {
+            foreach (ShipController controller in ShipController.ActiveControllers) { controller.whileHornPulled.Invoke(); }
+        }
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(ShipAlarmCord), nameof(ShipAlarmCord.StopHorn))]
+        private static void StopHorn()
+        {
+            foreach (ShipController controller in ShipController.ActiveControllers) { controller.onHornRelease.Invoke(); }
+        }
+
         // coroutine helping
         // used to successfully wait for the end of the coroutine before invoking the events
         private static IEnumerator WaitForEnd(IEnumerator original, Action callback)

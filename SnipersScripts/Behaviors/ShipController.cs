@@ -132,6 +132,26 @@ namespace SnipersScripts.Behaviors
             HUDManager.Instance.UseSignalTranslatorServerRpc(message);
         }
 
+        public UnityEngine.Events.UnityEvent onHornPull;
+        public UnityEngine.Events.UnityEvent whileHornPulled;
+        public UnityEngine.Events.UnityEvent onHornRelease;
+        private ShipAlarmCord horn = null;
+        /// <summary>
+        /// Pulls the ship horn if it exists
+        /// </summary>
+        public void PullHorn()
+        {
+            if (horn == null)
+            {
+                if (!FindShipUpgrade<ShipAlarmCord>())
+                {
+                    SnipersScripts.Logger.LogWarning("Tried to use non-existing horn. Cancelling.");
+                    return;
+                }
+            }
+            horn?.HoldCordDown();
+        }
+
         [Header("Ship Doors")]
         public UnityEngine.Events.UnityEvent onDoorOpen;
         public UnityEngine.Events.UnityEvent onDoorClose;
@@ -241,6 +261,11 @@ namespace SnipersScripts.Behaviors
             { 
                 signalTranslator = FindFirstObjectByType<SignalTranslator>();
                 if (signalTranslator != null) { return true; } 
+            }
+            if (typeof(T) == typeof(ShipAlarmCord))
+            {
+                horn = FindFirstObjectByType<ShipAlarmCord>();
+                if (horn != null) { return true; }
             }
             return false;
         }
