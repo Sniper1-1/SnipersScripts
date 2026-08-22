@@ -143,6 +143,20 @@ namespace SnipersScripts.Patches
             __result = WaitForEnd(__result, () => { foreach (ShipController controller in ShipController.ActiveControllers) { controller.onInverseEnd.Invoke(); } });
         }
 
+        // signal transmitter
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(HUDManager), nameof(HUDManager.DisplaySignalTranslatorMessage))]
+        private static void TransmitStart()
+        {
+            foreach (ShipController controller in ShipController.ActiveControllers) { controller.onSignalTransmitStart.Invoke(); }
+        }
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(HUDManager), nameof(HUDManager.DisplaySignalTranslatorMessage))]
+        private static void TransmitEnd(ref IEnumerator __result)
+        {
+            __result = WaitForEnd(__result, () => { foreach (ShipController controller in ShipController.ActiveControllers) { controller.onSignalTransmitEnd.Invoke(); } });
+        }
+
         // coroutine helping
         // used to successfully wait for the end of the coroutine before invoking the events
         private static IEnumerator WaitForEnd(IEnumerator original, Action callback)

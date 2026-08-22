@@ -116,6 +116,22 @@ namespace SnipersScripts.Behaviors
             else if (audioClip == null && StartOfRound.Instance.speakerAudioSource.isPlaying) { StartOfRound.Instance.DisableShipSpeaker(); }
         }
 
+        public UnityEngine.Events.UnityEvent onSignalTransmitStart;
+        public UnityEngine.Events.UnityEvent onSignalTransmitEnd;
+        private SignalTranslator signalTranslator = null;
+        public void TransmitMessage(string message)
+        {
+            if (signalTranslator == null)
+            {
+                if (!FindShipUpgrade<SignalTranslator>())
+                {
+                    SnipersScripts.Logger.LogWarning("Tried to transmit over nonexisting transmitter. Cancelling.");
+                    return;
+                }
+            }
+            HUDManager.Instance.UseSignalTranslatorServerRpc(message);
+        }
+
         [Header("Ship Doors")]
         public UnityEngine.Events.UnityEvent onDoorOpen;
         public UnityEngine.Events.UnityEvent onDoorClose;
@@ -220,6 +236,11 @@ namespace SnipersScripts.Behaviors
                     if (inverseTeleporter && teleporter.isInverseTeleporter) { teleporterInverse =  teleporter; return true; }
                     else if (!inverseTeleporter && !teleporter.isInverseTeleporter) { teleporterNormal = teleporter; return true; }
                 }
+            }
+            if (typeof(T) == typeof(SignalTranslator)) 
+            { 
+                signalTranslator = FindFirstObjectByType<SignalTranslator>();
+                if (signalTranslator != null) { return true; } 
             }
             return false;
         }
