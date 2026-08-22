@@ -283,12 +283,9 @@ namespace SnipersScripts.Behaviors
         /// <returns></returns>
         private List<T> FindObjectsInSampleScene<T>() where T : Component // where T : Component ensures T is a component
         {
-            List<T> possibleComponents = FindObjectsByType<T>(FindObjectsInactive.Include, FindObjectsSortMode.None).ToList();
-            foreach (T component in possibleComponents)
-            {
-                if(component.gameObject.scene.name != "SampleSceneRelay") { possibleComponents.Remove(component); }
-            }
-            return possibleComponents;
+            return FindObjectsByType<T>(FindObjectsInactive.Include, FindObjectsSortMode.None)
+            .Where(component => component.gameObject.scene.name == "SampleSceneRelay")
+            .ToList();
         }
     }
 }
