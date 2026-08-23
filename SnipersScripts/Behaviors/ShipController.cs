@@ -262,6 +262,45 @@ namespace SnipersScripts.Behaviors
             StartOfRound.Instance.shipRoomLights.ToggleShipLights();
         }
 
+        [Header("Electric Chair")]
+        public UnityEngine.Events.UnityEvent onClampLock;
+        public UnityEngine.Events.UnityEvent onClampUnlock;
+        public UnityEngine.Events.UnityEvent onClampToggle;
+        public UnityEngine.Events.UnityEvent onShockStart;
+        public UnityEngine.Events.UnityEvent onShockEnd;
+        private MoveToExitSpecialAnimation electricChair = null;
+        public void SetChairClampped(bool clamp)
+        {
+            if (FindElectricChair())
+            {
+                if (clamp != electricChair.exitingDisabled) { ToggleChairClamps(); }
+            }
+            else
+            {
+                SnipersScripts.Logger.LogWarning("Tried to interact with nonexisting electric chair. Cancelling.");
+            }
+        }
+        public void ToggleChairClamps()
+        {
+            if (FindElectricChair()) { ToggleChairClamps(!electricChair.exitingDisabled); }
+            else { SnipersScripts.Logger.LogWarning("Tried to interact with nonexisting electric chair. Cancelling."); }
+        }
+        private void ToggleChairClamps(bool clamp)
+        {
+            electricChair.SetExitingDisabled(clamp);
+            electricChair.animatedObjectTrigger.TriggerAnimation(StartOfRound.Instance.localPlayerController);
+        }
+        public void ShockElectricChair()
+        {
+            if (FindElectricChair()) { electricChair.OnShipPowerSurge(); }
+            else { SnipersScripts.Logger.LogWarning("Tried to interact with nonexisting electric chair. Cancelling."); }
+        }
+        private bool FindElectricChair()
+        {
+            if (electricChair != null) { return true; }
+            else { return FindShipComponent<MoveToExitSpecialAnimation>(); }
+        }
+
         //-------------------------------------------------------------------------------
 
         /// <summary>
@@ -307,6 +346,13 @@ namespace SnipersScripts.Behaviors
                         lightSwitch = trigger;
                         if (lightSwitch != null) { return true; }
                     }
+                }
+            }
+            if (typeof (T) == typeof(MoveToExitSpecialAnimation))
+            {
+                foreach (MoveToExitSpecialAnimation seat in FindObjectsInSampleScene<MoveToExitSpecialAnimation>())
+                {
+                    if (seat.electricChair) { electricChair = seat; return true; }
                 }
             }
             return false;

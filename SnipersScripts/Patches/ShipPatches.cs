@@ -190,6 +190,31 @@ namespace SnipersScripts.Patches
             }
         }
 
+        // electric chair
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(MoveToExitSpecialAnimation), nameof(MoveToExitSpecialAnimation.SetExitingDisabled))]
+        private static void ClampToggle(bool disabled)
+        {
+            foreach (var controller in ShipController.ActiveControllers)
+            {
+                if (disabled) { controller.onClampLock.Invoke(); }
+                if (!disabled) { controller.onClampUnlock.Invoke(); }
+                controller.onClampToggle.Invoke();
+            }
+        }
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(MoveToExitSpecialAnimation), nameof(MoveToExitSpecialAnimation.shockChair))]
+        private static void OnShockStart()
+        {
+            foreach(var controller in ShipController.ActiveControllers) { controller.onShockStart.Invoke();}
+        }
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(MoveToExitSpecialAnimation), nameof(MoveToExitSpecialAnimation.shockChair))]
+        private static void OnShockEnd(ref IEnumerator __result)
+        {
+            __result = WaitForEnd(__result, () => { foreach (ShipController controller in ShipController.ActiveControllers) { controller.onShockEnd.Invoke(); } });
+        }
+
         // coroutine helping
         // used to successfully wait for the end of the coroutine before invoking the events
         private static IEnumerator WaitForEnd(IEnumerator original, Action callback)
