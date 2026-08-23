@@ -177,6 +177,19 @@ namespace SnipersScripts.Patches
             foreach (ShipController controller in ShipController.ActiveControllers) { controller.onHornRelease.Invoke(); }
         }
 
+        // ship lights
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(ShipLights), nameof(ShipLights.ToggleShipLights))]
+        private static void ToggleLights()
+        {
+            foreach (var controller in ShipController.ActiveControllers)
+            {
+                controller.onShipLightsToggle.Invoke();
+                if (StartOfRound.Instance.shipRoomLights.areLightsOn) { controller.onShipLightsTurnOn.Invoke(); }
+                else { controller.onShipLightsTurnOff.Invoke(); }
+            }
+        }
+
         // coroutine helping
         // used to successfully wait for the end of the coroutine before invoking the events
         private static IEnumerator WaitForEnd(IEnumerator original, Action callback)

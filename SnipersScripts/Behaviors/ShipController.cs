@@ -239,6 +239,29 @@ namespace SnipersScripts.Behaviors
             else if (inverse && teleporterInverse.buttonTrigger.interactable) { teleporterInverse?.PressTeleportButtonOnLocalClient(); }
         }
 
+        [Header("Lights")]
+        public UnityEngine.Events.UnityEvent onShipLightsTurnOn;
+        public UnityEngine.Events.UnityEvent onShipLightsTurnOff;
+        public UnityEngine.Events.UnityEvent onShipLightsToggle;
+        private AnimatedObjectTrigger lightSwitch = null;
+        public void SetShipLightsOn(bool on)
+        {
+            if (on != StartOfRound.Instance.shipRoomLights.areLightsOn) { ToggleShipLights(); }
+        }
+        public void ToggleShipLights()
+        {
+            if (lightSwitch == null)
+            {
+                if (!FindShipComponent<AnimatedObjectTrigger>(gameObjectName: "LightSwitch"))
+                {
+                    SnipersScripts.Logger.LogWarning("Somehow the light switch is missing.");
+                    return;
+                }
+            }
+            lightSwitch?.TriggerAnimation(StartOfRound.Instance.localPlayerController);
+            StartOfRound.Instance.shipRoomLights.ToggleShipLights();
+        }
+
         //-------------------------------------------------------------------------------
 
         /// <summary>
@@ -246,8 +269,9 @@ namespace SnipersScripts.Behaviors
         /// </summary>
         /// <typeparam name="T">Used to locate the specific type of ship component</typeparam>
         /// <param name="inverseTeleporter">True if teleporter is inverse teleporter, false if regular teleporter</param>
-        /// <returns></returns>
-        private bool FindShipComponent<T>(bool inverseTeleporter = false)
+        /// <param name="gameObjectName">For the light switch, it does not have a good direct reference and must be found by name</param>
+        /// <returns>True if found, false if not</returns>
+        private bool FindShipComponent<T>(bool inverseTeleporter = false, string gameObjectName = "LightSwitch")
         {
             if(typeof(T) == typeof(ShipTeleporter))
             {
@@ -274,13 +298,24 @@ namespace SnipersScripts.Behaviors
                     if (shipHorn != null) { return true; }
                 }
             }
+            if (typeof(T) == typeof(AnimatedObjectTrigger) && gameObjectName == "LightSwitch")
+            {
+                foreach (AnimatedObjectTrigger trigger in FindObjectsInSampleScene<AnimatedObjectTrigger>())
+                {
+                    if (trigger.gameObject.name == "LightSwitch")
+                    {
+                        lightSwitch = trigger;
+                        if (lightSwitch != null) { return true; }
+                    }
+                }
+            }
             return false;
         }
         /// <summary>
         /// Used to get only ship upgrade components out of SampleSceneRelay in case for whatever reason a moon has them
         /// </summary>
         /// <typeparam name="T">Used to locate the specific type of ship component</typeparam>
-        /// <returns></returns>
+        /// <returns>List of matching components in SampleSceneRelay</returns>
         private List<T> FindObjectsInSampleScene<T>() where T : Component // where T : Component ensures T is a component
         {
             return FindObjectsByType<T>(FindObjectsInactive.Include, FindObjectsSortMode.None)
