@@ -301,6 +301,35 @@ namespace SnipersScripts.Behaviors
             else { return FindShipComponent<MoveToExitSpecialAnimation>(); }
         }
 
+        [Header("TV")]
+        public UnityEngine.Events.UnityEvent onTvTurnOn;
+        public UnityEngine.Events.UnityEvent OnTvTurnOff;
+        public UnityEngine.Events.UnityEvent onTvToggle;
+        public UnityEngine.Events.UnityEvent onTvStationChange;
+        private TVScript tv = null;
+        public void SetTvOn(bool on)
+        {
+            if (FindTv())
+            {
+                if (on != tv.tvOn) { ToggleTv(); }
+            }
+            else { SnipersScripts.Logger.LogWarning("Tried to interact with nonexisting TV. Cancelling."); }
+        }
+        public void ToggleTv()
+        {
+            if (FindTv()) { ToggleTv(!tv.tvOn); }
+            else { SnipersScripts.Logger.LogWarning("Tried to interact with nonexisting TV. Cancelling."); }
+        }
+        private void ToggleTv(bool on)
+        {
+            tv.SwitchTVLocalClient();
+        }
+        private bool FindTv()
+        {
+            if (tv != null) { return true; }
+            else { return FindShipComponent<TVScript>(); }
+        }
+
         //-------------------------------------------------------------------------------
 
         /// <summary>
@@ -353,6 +382,14 @@ namespace SnipersScripts.Behaviors
                 foreach (MoveToExitSpecialAnimation seat in FindObjectsInSampleScene<MoveToExitSpecialAnimation>())
                 {
                     if (seat.electricChair) { electricChair = seat; return true; }
+                }
+            }
+            if (typeof (T) == typeof(TVScript))
+            {
+                foreach (TVScript tvscript in FindObjectsInSampleScene<TVScript>())
+                {
+                    tv = tvscript;
+                    if (tv != null) { return true; }
                 }
             }
             return false;

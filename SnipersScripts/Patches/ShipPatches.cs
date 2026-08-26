@@ -215,6 +215,25 @@ namespace SnipersScripts.Patches
             __result = WaitForEnd(__result, () => { foreach (ShipController controller in ShipController.ActiveControllers) { controller.onShockEnd.Invoke(); } });
         }
 
+        // tv
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(TVScript), nameof(TVScript.TurnTVOnOff))]
+        private static void PowerTV(bool on)
+        {
+            foreach (var controller in ShipController.ActiveControllers)
+            {
+                if (on) { controller.onTvTurnOn.Invoke(); }
+                else { controller.OnTvTurnOff.Invoke(); }
+                controller.onTvToggle.Invoke();
+            }
+        }
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(TVScript), nameof(TVScript.TVFinishedClip))]
+        private static void ClipFinished()
+        {
+            foreach (ShipController controller in ShipController.ActiveControllers) { controller.onTvStationChange.Invoke(); }
+        }
+
         // coroutine helping
         // used to successfully wait for the end of the coroutine before invoking the events
         private static IEnumerator WaitForEnd(IEnumerator original, Action callback)
