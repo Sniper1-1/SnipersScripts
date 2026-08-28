@@ -228,73 +228,78 @@ namespace SnipersScripts.Patches
                 controller.onTvToggle.Invoke();
             }
         }
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(TVScript), nameof(TVScript.TVFinishedClip))]
-        private static void ClipFinished()
-        {
-            foreach (ShipController controller in ShipController.ActiveControllers) { controller.onTvStationChange.Invoke(); }
-        }
+        
         //patches for playing custom clips over the TV
         [HarmonyPrefix]
         [HarmonyPatch(typeof(TVScript), nameof(TVScript.TVFinishedClip))]
-        private static bool HandleOverrideFinished(TVScript __instance)
+        private static bool HandleClipFinished(TVScript __instance)
         {
-            if (ShipController.currentClipOverride == null) return true; // just run the vanilla code if no override
+            // loopPointReached only fires from a genuinely playing video — if tvOn false, skip
+            if (!__instance.tvOn) { return false; }
 
-            var finishedOverride = ShipController.currentClipOverride;
-            ShipController.currentClipOverride = null;
-            ShipController.overrideVisiblyPlaying = false;
-
-            foreach (ShipController controller in ShipController.ActiveControllers) { controller.onTvStationChange.Invoke(); }
-
-            if (finishedOverride.turnTVOff)
+            if (ShipController.currentClipOverride != null)
             {
-                __instance.TurnTVOnOff(false);
-                return false; // TV off, stop vanilla going to next clip
+                var finishedOverride = ShipController.currentClipOverride;
+                ShipController.currentClipOverride = null;
+                ShipController.overrideVisiblyPlaying = false;
+
+                //tv is on, override clip exists, invoke onTvStationChange because we're switching to this clip
+                foreach (ShipController controller in ShipController.ActiveControllers) { controller.onTvStationChange.Invoke(); }
+
+                if (finishedOverride.turnTVOff)
+                {
+                    __instance.TurnTVOnOff(false);
+                    return false; // TV off, stop vanilla going to next clip and invoking onTvStationChange
+                }
+                return true; // resume vanilla cycling
             }
 
-            return true; // let vanilla's own channel-advance logic run now that the override is cleared
+            // no override — normal vanilla channel change while genuinely on
+            foreach (ShipController controller in ShipController.ActiveControllers) { controller.onTvStationChange.Invoke(); }
+            return true; // resume vanilla cycling
         }
         [HarmonyPostfix]
         [HarmonyPatch(typeof(TVScript), nameof(TVScript.Update))]
         private static void TrackOverridePlayback(TVScript __instance)
         {
             if (ShipController.currentClipOverride == null) { return; }
+            var overrideClip = ShipController.currentClipOverride;
 
-            if (__instance.tvOn)
+            // used to track where we should be in the clip
+            ShipController.overrideElapsedTime += Time.deltaTime;
+
+            if (__instance.tvOn && !ShipController.overrideVisiblyPlaying)
             {
-                if (!ShipController.overrideVisiblyPlaying)
+                ShipController.overrideVisiblyPlaying = true;
+                __instance.video.clip = overrideClip.clip;
+                __instance.video.time = ShipController.overrideElapsedTime;
+                __instance.video.Play();
+
+                if (overrideClip.audio != null)
                 {
-                    ShipController.overrideVisiblyPlaying = true;
-                    __instance.video.clip = ShipController.currentClipOverride.clip;
-                    __instance.video.time = ShipController.overrideElapsedTime;
-                    __instance.video.Play();
+                    __instance.tvSFX.clip = overrideClip.audio;
+                    __instance.tvSFX.time = ShipController.overrideElapsedTime;
+                    __instance.tvSFX.Play();
+                }
 
-                    if (ShipController.currentClipOverride.audio != null)
-                    {
-                        __instance.tvSFX.clip = ShipController.currentClipOverride.audio;
-                        __instance.tvSFX.time = ShipController.overrideElapsedTime;
-                        __instance.tvSFX.Play();
-                    }
-
+                if (!ShipController.overrideStartedWithTvOff)
+                {
                     foreach (ShipController controller in ShipController.ActiveControllers) { controller.onTvStationChange.Invoke(); }
                 }
-                // completion while visible is handled by TVFinishedClipPrefix above, via the real loopPointReached event
+                ShipController.overrideStartedWithTvOff = false; // only suppresses this first reveal
             }
-            else
+            else if (!__instance.tvOn && ShipController.overrideVisiblyPlaying)
             {
-                if (ShipController.overrideVisiblyPlaying)
-                {
-                    // just turned off — capture position and go quiet
-                    ShipController.overrideVisiblyPlaying = false;
-                    ShipController.overrideElapsedTime = (float)__instance.video.time;
-                    __instance.video.Stop();
-                    __instance.tvSFX.Stop();
-                }
+                ShipController.overrideVisiblyPlaying = false;
+                __instance.video.Stop();
+                __instance.tvSFX.Stop();
+            }
 
-                ShipController.overrideElapsedTime += Time.deltaTime; // used to track when the clip should be if turned on during its runtime
-
-                if (ShipController.overrideElapsedTime >= ShipController.currentClipOverride.clip.length) { ShipController.currentClipOverride = null; } // the clip has already finished
+            // Completion while on is handled by HandleClipFinished (real loopPointReached event).
+            // Completion while off is handled here, since no video event fires while off.
+            if (!__instance.tvOn && ShipController.overrideElapsedTime >= overrideClip.clip.length)
+            {
+                ShipController.currentClipOverride = null; // finished while tv was off, quietly remove the override since it's done playing
             }
         }
 

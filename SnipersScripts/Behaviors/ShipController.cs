@@ -336,10 +336,13 @@ namespace SnipersScripts.Behaviors
         public static float overrideElapsedTime = 0f;
         [HideInInspector]
         public static bool overrideVisiblyPlaying = false;
+        [HideInInspector] 
+        public static bool overrideStartedWithTvOff = false;
         public void SetTVClip(TelevisionClipContainerSO clip)
         {
             if (FindTv() && clip != null) 
             {
+                overrideStartedWithTvOff = !tv.tvOn;
                 currentClipOverride = clip;
                 overrideElapsedTime = 0f;
                 overrideVisiblyPlaying = false; // forces the "just started" branch to run on the next Update, regardless of current tv.tvOn state
