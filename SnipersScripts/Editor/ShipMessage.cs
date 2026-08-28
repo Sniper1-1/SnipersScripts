@@ -6,6 +6,7 @@ namespace SnipersScripts.Editor
     public class ShipMessageSO : ScriptableObject
     {
         [SerializeField]
+        [Tooltip("The alerts like the ones that appear when the ship leaves at midnight.")]
         public DialogueSegment[] shipMessage;
     }
 }

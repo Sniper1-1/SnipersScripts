@@ -83,24 +83,15 @@ namespace SnipersScripts.Behaviors
         }
 
         [Header("Ship Communication")]
-        [Tooltip("The alerts like the ones that appear when the ship leaves at midnight.")]
-        public DialogueSegment[] shipMessage;
         [Tooltip("Events that trigger when a ship message starts")]
         public UnityEngine.Events.UnityEvent onShipMessageStart;
         [Tooltip("Events that trigger when a ship message ends")]
         public UnityEngine.Events.UnityEvent onShipMessageEnd;
         /// <summary>
-        /// Displays message on the component like the one that plays when the ship leaves at midnight.
-        /// </summary>
-        public void BroadcastShipMessage()
-        {
-            HUDManager.Instance.ReadDialogue(shipMessage);
-        }
-        /// <summary>
         /// Displays message in the provided scriptable object like the one that plays when the ship leaves at midnight.
         /// </summary>
         /// <param name="message">The scriptable object to pull the message from.</param>
-        public void BroadcastShipMessage(ShipMessageSO message)
+        public void SetShipMessage(ShipMessageSO message)
         {
             HUDManager.Instance.ReadDialogue(message.shipMessage);
         }
