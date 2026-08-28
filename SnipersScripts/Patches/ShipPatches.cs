@@ -241,12 +241,13 @@ namespace SnipersScripts.Patches
         {
             if (ShipController.currentClipOverride == null) return true; // just run the vanilla code if no override
 
+            var finishedOverride = ShipController.currentClipOverride;
             ShipController.currentClipOverride = null;
             ShipController.overrideVisiblyPlaying = false;
 
             foreach (ShipController controller in ShipController.ActiveControllers) { controller.onTvStationChange.Invoke(); }
 
-            if (ShipController.currentClipOverride.turnTVOff)
+            if (finishedOverride.turnTVOff)
             {
                 __instance.TurnTVOnOff(false);
                 return false; // TV off, stop vanilla going to next clip
@@ -258,7 +259,7 @@ namespace SnipersScripts.Patches
         [HarmonyPatch(typeof(TVScript), nameof(TVScript.Update))]
         private static void TrackOverridePlayback(TVScript __instance)
         {
-            if (ShipController.currentClipOverride == null) return;
+            if (ShipController.currentClipOverride == null) { return; }
 
             if (__instance.tvOn)
             {
