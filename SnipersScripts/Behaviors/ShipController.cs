@@ -330,6 +330,28 @@ namespace SnipersScripts.Behaviors
             else { return FindShipComponent<TVScript>(); }
         }
 
+        [HideInInspector]
+        public static TelevisionClipContainerSO currentClipOverride = null;
+        [HideInInspector]
+        public static float overrideElapsedTime = 0f;
+        [HideInInspector]
+        public static bool overrideVisiblyPlaying = false;
+        public void SetTVClip(TelevisionClipContainerSO clip)
+        {
+            if (FindTv() && clip != null) 
+            {
+                currentClipOverride = clip;
+                overrideElapsedTime = 0f;
+                overrideVisiblyPlaying = false; // forces the "just started" branch to run on the next Update, regardless of current tv.tvOn state
+
+                if (currentClipOverride.forceTVOn && !tv.tvOn)
+                {
+                    tv.TurnTVOnOff(true);
+                }
+            }
+            else { SnipersScripts.Logger.LogWarning("Tried to interact with nonexisting TV. Cancelling."); }
+        }
+
         //-------------------------------------------------------------------------------
 
         /// <summary>
