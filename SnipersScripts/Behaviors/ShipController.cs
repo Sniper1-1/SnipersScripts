@@ -111,7 +111,7 @@ namespace SnipersScripts.Behaviors
         public UnityEngine.Events.UnityEvent onSignalTransmitStart;
         public UnityEngine.Events.UnityEvent onSignalTransmitEnd;
         private SignalTranslator signalTranslator = null;
-        public void TransmitMessage(string message)
+        public void SetTransmitterMessage(string message)
         {
             if (signalTranslator == null)
             {
@@ -181,18 +181,18 @@ namespace SnipersScripts.Behaviors
         /// Sets screen powered state
         /// </summary>
         /// <param name="powered">If true, turns on screen if not already on. If false, turns screen off if not already off.</param>
-        public void SetScreenOn(bool powered)
+        public void SetShipScreenOn(bool powered)
         {
-            if (powered != StartOfRound.Instance.mapScreen.isScreenOn) { ToggleScreenPower(); }
+            if (powered != StartOfRound.Instance.mapScreen.isScreenOn) { ToggleShipScreenPower(); }
         }
         /// <summary>
         /// Inverts screen powered state
         /// </summary>
-        public void ToggleScreenPower()
+        public void ToggleShipScreenPower()
         {
-            ToggleScreenPower(!StartOfRound.Instance.mapScreen.isScreenOn);
+            ToggleShipScreenPower(!StartOfRound.Instance.mapScreen.isScreenOn);
         }
-        private void ToggleScreenPower(bool power)
+        private void ToggleShipScreenPower(bool power)
         {
             if (power) { StartOfRound.Instance.mapScreen.SwitchScreenOn(true); }
             else { StartOfRound.Instance.mapScreen.SwitchScreenOn(false); }
@@ -200,7 +200,7 @@ namespace SnipersScripts.Behaviors
         /// <summary>
         /// Switches who the monitor is spectating
         /// </summary>
-        public void SwitchScreenSpectatorToggle()
+        public void ToggleShipScreenSpectator()
         {
             StartOfRound.Instance.mapScreen.SwitchRadarTargetForward(true);
         }
@@ -329,7 +329,7 @@ namespace SnipersScripts.Behaviors
         public static bool overrideVisiblyPlaying = false;
         [HideInInspector] 
         public static bool overrideStartedWithTvOff = false;
-        public void SetTVClip(TelevisionClipContainerSO clip)
+        public void SetTvClip(TelevisionClipContainerSO clip)
         {
             if (FindTv() && clip != null) 
             {
