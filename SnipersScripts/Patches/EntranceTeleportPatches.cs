@@ -24,7 +24,13 @@ namespace SnipersScripts.Patches
         [HarmonyPatch(typeof(EntranceTeleport), nameof(EntranceTeleport.TeleportPlayer))]
         private static void UnlockLockedDoor(EntranceTeleport __instance)
         {
-            if (!__instance.exitScript.triggerScript.interactable) { __instance.exitScript.triggerScript.interactable = true; }
+            if (!__instance.exitScript.triggerScript.interactable) {
+                foreach (EntranceTeleportLock locker in EntranceTeleportLock.ActiveLockers)
+                {
+                    if (__instance.exitScript.isEntranceToBuilding) { locker.UnlockIndividualOutside(__instance); }
+                    else if (!__instance.exitScript.isEntranceToBuilding) { locker.UnlockIndividualInside(__instance); }
+                }
+            }
         }
     }
 }

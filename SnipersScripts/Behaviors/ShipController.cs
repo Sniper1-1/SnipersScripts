@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using SnipersScripts.Editor;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace SnipersScripts.Behaviors
 {
     [AddComponentMenu("SnipersScripts/ShipController")]
-    public class ShipController : MonoBehaviour
+    public class ShipController : NetworkBehaviour
     {
         // Registry of every active ship controller currently loaded
         internal static readonly List<ShipController> ActiveControllers = new List<ShipController>();
@@ -59,26 +60,30 @@ namespace SnipersScripts.Behaviors
         /// </summary>
         public void ToggleShipFlight()
         {
-            ToggleShipFlight(!StartOfRound.Instance.shipHasLanded);
+            ToggleShipFlightRpc(!StartOfRound.Instance.shipHasLanded);
         }
-        private void ToggleShipFlight(bool land)
+        [Rpc(SendTo.Everyone, RequireOwnership = false)]
+        private void ToggleShipFlightRpc(bool land)
         {
-            if (FindFirstObjectByType<StartMatchLever>().triggerScript.interactable)
+            if(IsClient)
             {
-                if (land)
+                if (FindFirstObjectByType<StartMatchLever>().triggerScript.interactable)
                 {
-                    FindFirstObjectByType<StartMatchLever>().LeverAnimation();
-                    StartOfRound.Instance.StartGame();
+                    if (land)
+                    {
+                        FindFirstObjectByType<StartMatchLever>().LeverAnimation();
+                        StartOfRound.Instance.StartGame();
+                    }
+                    else
+                    {
+                        FindFirstObjectByType<StartMatchLever>().LeverAnimation();
+                        StartOfRound.Instance.ShipLeave();
+                    }
                 }
                 else
                 {
-                    FindFirstObjectByType<StartMatchLever>().LeverAnimation();
-                    StartOfRound.Instance.ShipLeave();
+                    SnipersScripts.Logger.LogWarning("Tried to move ship when lever can't be pulled. Cancelling action.");
                 }
-            }
-            else
-            {
-                SnipersScripts.Logger.LogWarning("Tried to move ship when lever can't be pulled. Cancelling action.");
             }
         }
 
@@ -164,9 +169,10 @@ namespace SnipersScripts.Behaviors
         /// </summary>
         public void ToggleShipDoor()
         {
-            ToggleShipDoor(!FindFirstObjectByType<HangarShipDoor>().shipDoorsAnimator.GetBool("Closed"));
+            ToggleShipDoorRpc(!FindFirstObjectByType<HangarShipDoor>().shipDoorsAnimator.GetBool("Closed"));
         }
-        private void ToggleShipDoor(bool powered)
+        [Rpc(SendTo.Everyone, RequireOwnership = false)]
+        private void ToggleShipDoorRpc(bool powered)
         {
             if (powered) { FindFirstObjectByType<HangarShipDoor>().PlayDoorAnimation(true); }
             else { FindFirstObjectByType<HangarShipDoor>().PlayDoorAnimation(false); }
@@ -190,12 +196,13 @@ namespace SnipersScripts.Behaviors
         /// </summary>
         public void ToggleShipScreenPower()
         {
-            ToggleShipScreenPower(!StartOfRound.Instance.mapScreen.isScreenOn);
+            ToggleShipScreenPowerRpc(!StartOfRound.Instance.mapScreen.isScreenOn);
         }
-        private void ToggleShipScreenPower(bool power)
+        [Rpc(SendTo.Everyone, RequireOwnership = false)]
+        private void ToggleShipScreenPowerRpc(bool power)
         {
-            if (power) { StartOfRound.Instance.mapScreen.SwitchScreenOn(true); }
-            else { StartOfRound.Instance.mapScreen.SwitchScreenOn(false); }
+            if (power) { StartOfRound.Instance.mapScreen.SwitchScreenOnServerRpc(true); }
+            else { StartOfRound.Instance.mapScreen.SwitchScreenOnServerRpc(false); }
         }
         /// <summary>
         /// Switches who the monitor is spectating
@@ -281,7 +288,8 @@ namespace SnipersScripts.Behaviors
             electricChair.SetExitingDisabled(clamp);
             electricChair.animatedObjectTrigger.TriggerAnimation(StartOfRound.Instance.localPlayerController);
         }
-        public void ShockElectricChair()
+        [Rpc(SendTo.Everyone, RequireOwnership = false)]
+        public void ShockElectricChairRpc()
         {
             if (FindElectricChair()) { electricChair.OnShipPowerSurge(); }
             else { SnipersScripts.Logger.LogWarning("Tried to interact with nonexisting electric chair. Cancelling."); }

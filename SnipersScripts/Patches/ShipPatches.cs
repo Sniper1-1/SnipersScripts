@@ -97,7 +97,7 @@ namespace SnipersScripts.Patches
 
         // radar screen
         [HarmonyPostfix]
-        [HarmonyPatch(typeof(ManualCameraRenderer),nameof(ManualCameraRenderer.SwitchRadarTargetForward))]
+        [HarmonyPatch(typeof(ManualCameraRenderer),nameof(ManualCameraRenderer.SwitchRadarTargetClientRpc))]
         private static void SwitchSpectateTarget()
         {
             foreach (ShipController controller in ShipController.ActiveControllers) { controller.onScreenSpectatorToggle.Invoke(); }
@@ -160,19 +160,22 @@ namespace SnipersScripts.Patches
 
         // ship horn
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(ShipAlarmCord), nameof(ShipAlarmCord.PullCordServerRpc))]
+        [HarmonyPatch(typeof(ShipAlarmCord), nameof(ShipAlarmCord.PullCordClientRpc))]
         private static void StartHorn()
         {
             foreach (ShipController controller in ShipController.ActiveControllers) { controller.onHornPull.Invoke(); }
         }
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(ShipAlarmCord), nameof(ShipAlarmCord.HoldCordDown))]
-        private static void HoldCord()
+        [HarmonyPatch(typeof(ShipAlarmCord), nameof(ShipAlarmCord.Update))]
+        private static void HoldCord(ShipAlarmCord __instance)
         {
-            foreach (ShipController controller in ShipController.ActiveControllers) { controller.whileHornPulled.Invoke(); }
+            if (__instance.hornBlaring)
+            {
+                foreach (ShipController controller in ShipController.ActiveControllers) { controller.whileHornPulled.Invoke(); }
+            }            
         }
         [HarmonyPrefix]
-        [HarmonyPatch(typeof(ShipAlarmCord), nameof(ShipAlarmCord.StopHorn))]
+        [HarmonyPatch(typeof(ShipAlarmCord), nameof(ShipAlarmCord.StopPullingCordClientRpc))]
         private static void StopHorn()
         {
             foreach (ShipController controller in ShipController.ActiveControllers) { controller.onHornRelease.Invoke(); }

@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace SnipersScripts.Behaviors
 {
     [AddComponentMenu("SnipersScripts/EntranceTeleportLock")]
-    public class EntranceTeleportLock: MonoBehaviour
+    public class EntranceTeleportLock: NetworkBehaviour
     {
         // Registry of every active locker currently loaded
         internal static readonly List<EntranceTeleportLock> ActiveLockers = new List<EntranceTeleportLock>();
@@ -15,7 +16,7 @@ namespace SnipersScripts.Behaviors
         public List<EntranceTeleport> teleports = new List<EntranceTeleport>();
         public string lockedMessage = "Door locked";
 
-        //all
+        // ----------------------------- all -----------------------------
         public void LockAll()
         {
             LockInside();
@@ -26,7 +27,7 @@ namespace SnipersScripts.Behaviors
             UnlockInside();
             UnlockOutside();
         }
-        //inside
+        // ----------------------------- inside -----------------------------
         public void LockInside()
         {
             LockMainInside();
@@ -75,7 +76,7 @@ namespace SnipersScripts.Behaviors
             if (tp.isEntranceToBuilding) { Lock(teleport: tp.exitScript, locked: false); }
             else if (!tp.isEntranceToBuilding) { Lock(teleport: tp, locked: false); }
         }
-        //outside
+        // ----------------------------- outside -----------------------------
         public void LockOutside()
         {
             LockMainOutside();
@@ -125,8 +126,9 @@ namespace SnipersScripts.Behaviors
             else if (tp.isEntranceToBuilding) { Lock(teleport: tp, locked: false); }
         }
 
-        //-----------------Helpers-------------------------
-        public void SetLockedMessage(string message = null)
+        // ----------------------------- Helpers -----------------------------
+        [Rpc(SendTo.Everyone, RequireOwnership = false)]
+        public void SetLockedMessageRpc(string message = null)
         {
             lockedMessage = message;
             foreach(var teleport in teleports) { teleport.triggerScript.disabledHoverTip = lockedMessage; }
@@ -136,9 +138,17 @@ namespace SnipersScripts.Behaviors
         {
             if (teleport != null && teleport.triggerScript != null) 
             {
-                SetLockedMessage(lockedMessage);
-                teleport.triggerScript.interactable = !locked;
+                LockRpc(teleport.entranceId, locked: locked, outside: teleport.isEntranceToBuilding); //why can't Rpcs use anything more than basic datatypes! :(
             }
+        }
+        [Rpc(SendTo.Everyone, RequireOwnership = false)] //all this because I can't just pass custom classes :(
+        private void LockRpc(int id, bool locked, bool outside)
+        {
+            SetLockedMessageRpc(lockedMessage);
+            foreach(var teleport in teleports)
+            {
+                if (teleport.entranceId==id && teleport.isEntranceToBuilding==outside) { teleport.triggerScript.interactable = !locked; }
+            }            
         }
     }
 }

@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿using Unity.Netcode;
+using UnityEngine;
 
 namespace SnipersScripts.Behaviors
 {
     [AddComponentMenu("SnipersScripts/WaitRandomTime")]
-    internal class WaitRandomTime: MonoBehaviour
+    internal class WaitRandomTime: NetworkBehaviour
     {
         [Min(0f)]
         public float minWaitTime = 1f;
@@ -29,21 +30,25 @@ namespace SnipersScripts.Behaviors
 
         public void Start()
         {
-            if (runOnStart) { StartWait(); }
+            if (runOnStart) { StartWaitRpc(); }
         }
 
-        public void StartWait()
+        [Rpc(SendTo.Everyone, RequireOwnership = false)]
+        public void StartWaitRpc()
         {
-            random ??= new(RoundManager.Instance.playersManager.randomMapSeed + (int)base.transform.position.x + (int)base.transform.position.y + (int)base.transform.position.z); //seeds the random number generator with the same seed as round if random is null (also factoring in the object's position)
-            if (minWaitTime > maxWaitTime)
+            if (IsClient) 
             {
-                SnipersScripts.Logger.LogWarning($"WaitRandomTime: minWaitTime ({minWaitTime}) is greater than maxWaitTime ({maxWaitTime}). Switching values.");
-                float temp = minWaitTime;
-                minWaitTime = maxWaitTime;
-                maxWaitTime = temp;
-            }
+                random ??= new(RoundManager.Instance.playersManager.randomMapSeed + (int)base.transform.position.x + (int)base.transform.position.y + (int)base.transform.position.z); //seeds the random number generator with the same seed as round if random is null (also factoring in the object's position)
+                if (minWaitTime > maxWaitTime)
+                {
+                    SnipersScripts.Logger.LogWarning($"WaitRandomTime: minWaitTime ({minWaitTime}) is greater than maxWaitTime ({maxWaitTime}). Switching values.");
+                    float temp = minWaitTime;
+                    minWaitTime = maxWaitTime;
+                    maxWaitTime = temp;
+                }
 
-            waitCoroutine = StartCoroutine(Wait());
+                waitCoroutine = StartCoroutine(Wait());
+            }
         }
 
         private System.Collections.IEnumerator Wait()
@@ -67,13 +72,17 @@ namespace SnipersScripts.Behaviors
             return currentWaitingTime;
         }
 
-        public void StopWait()
+        [Rpc(SendTo.Everyone, RequireOwnership = false)]
+        public void StopWaitRpc()
         {
-            if (waitCoroutine != null)
+            if (IsClient)
             {
-                onWaitStop?.Invoke();
-                StopCoroutine(waitCoroutine);
-                waitCoroutine = null;
+                if (waitCoroutine != null)
+                {
+                    onWaitStop?.Invoke();
+                    StopCoroutine(waitCoroutine);
+                    waitCoroutine = null;
+                }
             }
         }
     }
