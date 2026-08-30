@@ -16,11 +16,18 @@ namespace SnipersScripts.Behaviors
             if (fireRaysOnStart) { FireRays(); }
         }
 
+        /// <summary>
+        /// Fires every raycast in the Raycast Options list
+        /// </summary>
         public void FireRays()
         {
             foreach (var ray in raycastOptions) { FireRay(ray); }
         }
-        public void FireRay(int rayIndex) // can be manually called to fire a specific raycast
+        /// <summary>
+        /// Fire a specific raycast based on index in the Raycast Options list
+        /// </summary>
+        /// <param name="rayIndex">The index of the specific ray to fire</param>
+        public void FireRay(int rayIndex) // 
         {
             if (rayIndex >= 0 && rayIndex < raycastOptions.Count)
             {
@@ -32,6 +39,10 @@ namespace SnipersScripts.Behaviors
             }
         }
 
+        /// <summary>
+        /// Fire a specific raycast
+        /// </summary>
+        /// <param name="ray">The RaycastOptions to use</param>
         public void FireRay(RaycastOptions ray)
         {
             Vector3 rayStartPosition = this.transform.position;
@@ -55,12 +66,19 @@ namespace SnipersScripts.Behaviors
     [System.Serializable]
     public class RaycastOptions : ISerializationCallbackReceiver // extend ISerializationCallbackReceiver so the editor can be forced to display proper defaults
     {
+        [Tooltip("The direction to fire the raycast")]
         public Vector3 direction;
+        [Tooltip("How far the ray should travel before failing")]
         public float distance;
+        [Tooltip("If true, ray fires in the global rotation. If false, it fires relative to the attached game object's rotation.")]
         public bool globalAxis=false;
+        [Tooltip("What layers the raycast hits successfully.")]
         public LayerMask mask;
+        [Tooltip("Fires when the ray starts, with its start position.")]
         public UnityEngine.Events.UnityEvent<Vector3> onRayStart;
+        [Tooltip("Fires when the ray hits something in the Mask, with its hit position.")]
         public UnityEngine.Events.UnityEvent<Vector3> onRayHit;
+        [Tooltip("Fires when the ray fails to hit something in the Mask, with its start position.")]
         public UnityEngine.Events.UnityEvent<Vector3> onRayFail;
 
         // all the below is just so the Unity editor serializes the proper defaults, because it 0s them out when they're in lists

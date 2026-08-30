@@ -33,10 +33,30 @@ namespace SnipersScripts.Behaviors
                 if (logType == type.Fatal) { PrintFatal(log); }
             }
         }
+        /// <summary>
+        /// Prints to debug channel
+        /// </summary>
+        /// <param name="message">Message to log</param>
         public void PrintDebug(string message) { SnipersScripts.Logger.LogDebug($"{MESSAGE_STARTER}\"{message}\""); }
+        /// <summary>
+        /// Prints to info channel
+        /// </summary>
+        /// <param name="message">Message to log</param>
         public void PrintInfo(string message) { SnipersScripts.Logger.LogInfo($"{MESSAGE_STARTER}\"{message}\""); }
+        /// <summary>
+        /// Prints to warning channel
+        /// </summary>
+        /// <param name="message">Message to log</param>
         public void PrintWarning(string message) { SnipersScripts.Logger.LogWarning($"{MESSAGE_STARTER}\"{message}\""); }
+        /// <summary>
+        /// Prints to error channel
+        /// </summary>
+        /// <param name="message">Message to log</param>
         public void PrintError(string message) { SnipersScripts.Logger.LogError($"{MESSAGE_STARTER}\"{message}\""); }
+        /// <summary>
+        /// Prints to fatal channel
+        /// </summary>
+        /// <param name="message">Message to log</param>
         public void PrintFatal(string message) { SnipersScripts.Logger.LogFatal($"{MESSAGE_STARTER}\"{message}\""); }
     }
 }

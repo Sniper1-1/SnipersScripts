@@ -16,7 +16,7 @@ namespace SnipersScripts.Patches
             TrackPlayerInShip(__instance);
         }
 
-        private static void TrackPlayerInShip(PlayerControllerB player)
+        private static void TrackPlayerInShip(PlayerControllerB player) //used to keep track of when a player enters/exits the ship
         {            
             foreach (var detector in PlayerInShipDetector.ActiveDetectors.ToArray())
             {

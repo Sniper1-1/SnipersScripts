@@ -33,6 +33,9 @@ namespace SnipersScripts.Behaviors
             if (runOnStart) { StartWaitRpc(); }
         }
 
+        /// <summary>
+        /// Starts the timer
+        /// </summary>
         [Rpc(SendTo.Everyone, RequireOwnership = false)]
         public void StartWaitRpc()
         {
@@ -72,6 +75,9 @@ namespace SnipersScripts.Behaviors
             return currentWaitingTime;
         }
 
+        /// <summary>
+        /// Stops the current timer
+        /// </summary>
         [Rpc(SendTo.Everyone, RequireOwnership = false)]
         public void StopWaitRpc()
         {

@@ -4,6 +4,7 @@ using SnipersScripts;
 using Unity.Netcode;
 using UnityEngine;
 
+//register network prefab to require all players to have mod installed
 [HarmonyPatch(typeof(NetworkManager))]
 internal static class NetworkPrefabPatch1
 {

@@ -242,10 +242,17 @@ namespace SnipersScripts.Behaviors
         public UnityEngine.Events.UnityEvent onShipLightsTurnOff;
         public UnityEngine.Events.UnityEvent onShipLightsToggle;
         private AnimatedObjectTrigger lightSwitch = null;
+        /// <summary>
+        /// Sets the lights on/off
+        /// </summary>
+        /// <param name="on">True, turns on if not already. False, turns off if not already.</param>
         public void SetShipLightsOn(bool on)
         {
             if (on != StartOfRound.Instance.shipRoomLights.areLightsOn) { ToggleShipLights(); }
         }
+        /// <summary>
+        /// Inverts ship lights power
+        /// </summary>
         public void ToggleShipLights()
         {
             if (lightSwitch == null)
@@ -267,6 +274,10 @@ namespace SnipersScripts.Behaviors
         public UnityEngine.Events.UnityEvent onShockStart;
         public UnityEngine.Events.UnityEvent onShockEnd;
         private MoveToExitSpecialAnimation electricChair = null;
+        /// <summary>
+        /// Sets the clamps on the electric chair to open/closed
+        /// </summary>
+        /// <param name="clamp">True, closed if not already. False, open if not already.</param>
         public void SetChairClampped(bool clamp)
         {
             if (FindElectricChair())
@@ -278,6 +289,9 @@ namespace SnipersScripts.Behaviors
                 SnipersScripts.Logger.LogWarning("Tried to interact with nonexisting electric chair. Cancelling.");
             }
         }
+        /// <summary>
+        /// Invert the electric chair clamp open/closed state
+        /// </summary>
         public void ToggleChairClamps()
         {
             if (FindElectricChair()) { ToggleChairClamps(!electricChair.exitingDisabled); }
@@ -288,6 +302,9 @@ namespace SnipersScripts.Behaviors
             electricChair.SetExitingDisabled(clamp);
             electricChair.animatedObjectTrigger.TriggerAnimation(StartOfRound.Instance.localPlayerController);
         }
+        /// <summary>
+        /// Shocks the electric chair
+        /// </summary>
         [Rpc(SendTo.Everyone, RequireOwnership = false)]
         public void ShockElectricChairRpc()
         {
@@ -306,6 +323,10 @@ namespace SnipersScripts.Behaviors
         public UnityEngine.Events.UnityEvent onTvToggle;
         public UnityEngine.Events.UnityEvent onTvStationChange;
         private TVScript tv = null;
+        /// <summary>
+        /// Sets the tv on/off
+        /// </summary>
+        /// <param name="on">True, turns on if not already. False, turns off if not already.</param>
         public void SetTvOn(bool on)
         {
             if (FindTv())
@@ -314,6 +335,9 @@ namespace SnipersScripts.Behaviors
             }
             else { SnipersScripts.Logger.LogWarning("Tried to interact with nonexisting TV. Cancelling."); }
         }
+        /// <summary>
+        /// Inverts the tv power
+        /// </summary>
         public void ToggleTv()
         {
             if (FindTv()) { ToggleTv(!tv.tvOn); }
@@ -337,6 +361,10 @@ namespace SnipersScripts.Behaviors
         public static bool overrideVisiblyPlaying = false;
         [HideInInspector] 
         public static bool overrideStartedWithTvOff = false;
+        /// <summary>
+        /// Plays a specific clip over the tv
+        /// </summary>
+        /// <param name="clip">The information container for the tv to play from</param>
         public void SetTvClip(TelevisionClipContainerSO clip)
         {
             if (FindTv() && clip != null) 
@@ -401,11 +429,11 @@ namespace SnipersScripts.Behaviors
                     }
                 }
             }
-            if (typeof (T) == typeof(MoveToExitSpecialAnimation))
+            if (typeof (T) == typeof(MoveToExitSpecialAnimation)) //electric chair
             {
                 foreach (MoveToExitSpecialAnimation seat in FindObjectsInSampleScene<MoveToExitSpecialAnimation>())
                 {
-                    if (seat.electricChair) { electricChair = seat; return true; }
+                    if (seat.electricChair) { electricChair = seat; return true; } //verify it is the electric chair and not just the chair
                 }
             }
             if (typeof (T) == typeof(TVScript))

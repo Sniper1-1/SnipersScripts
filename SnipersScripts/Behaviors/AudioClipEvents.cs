@@ -16,6 +16,10 @@ namespace SnipersScripts.Behaviors
 
         private Coroutine audioCorutine = null;
 
+        /// <summary>
+        /// Plays the clip over an audio source and starts the timer.
+        /// </summary>
+        /// <param name="clip">The audio clip to play and wait to end.</param>
         public void PlayAudioClip(AudioClip clip)
         {
             if (audioSource == null)
@@ -28,6 +32,9 @@ namespace SnipersScripts.Behaviors
             onAudioClipStart.Invoke();
             audioCorutine = StartCoroutine(WaitForAudioClipEnd());
         }
+        /// <summary>
+        /// Stops the current clip and timer
+        /// </summary>
         public void StopAudioClip()
         {
             if (audioSource == null)
