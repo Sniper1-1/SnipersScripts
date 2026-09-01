@@ -2,14 +2,14 @@
 
 namespace SnipersScripts.Editor
 {
-    [CreateAssetMenu(fileName = "Comment", menuName = "SnipersScripts/Comment")]
+    [CreateAssetMenu(fileName = "Comment", menuName = "SnipersScripts/CommentSO")]
     public class CommentSO : ScriptableObject
     {
         [SerializeField]
         [TextArea(1, 20)]
         private string commentText = string.Empty;
     }
-    [AddComponentMenu("SnipersScripts/Comment")]
+    [AddComponentMenu("SnipersScripts/CommentComponent")]
     public class  CommentComponent : MonoBehaviour
     {
         [SerializeField]

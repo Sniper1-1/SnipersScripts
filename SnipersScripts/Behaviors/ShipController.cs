@@ -116,6 +116,10 @@ namespace SnipersScripts.Behaviors
         public UnityEngine.Events.UnityEvent onSignalTransmitStart;
         public UnityEngine.Events.UnityEvent onSignalTransmitEnd;
         private SignalTranslator signalTranslator = null;
+        /// <summary>
+        /// Sends a message over the signal transmitter
+        /// </summary>
+        /// <param name="message">Message to transmit</param>
         public void SetTransmitterMessage(string message)
         {
             if (signalTranslator == null)
@@ -278,7 +282,7 @@ namespace SnipersScripts.Behaviors
         /// Sets the clamps on the electric chair to open/closed
         /// </summary>
         /// <param name="clamp">True, closed if not already. False, open if not already.</param>
-        public void SetChairClampped(bool clamp)
+        public void SetChairClamped(bool clamp)
         {
             if (FindElectricChair())
             {

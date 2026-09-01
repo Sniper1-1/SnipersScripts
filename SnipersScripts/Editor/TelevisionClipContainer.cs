@@ -3,7 +3,7 @@ using UnityEngine.Video;
 
 namespace SnipersScripts.Editor
 {
-    [CreateAssetMenu(fileName = "TVClip", menuName = "SnipersScripts/TelevisionClipContainer")]
+    [CreateAssetMenu(fileName = "TVClip", menuName = "SnipersScripts/TelevisionClipContainerSO")]
     public class TelevisionClipContainerSO : ScriptableObject
     {
         [Tooltip("The clip to play.")]

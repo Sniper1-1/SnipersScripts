@@ -1,11 +1,13 @@
 ﻿using SnipersScripts.Patches;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace SnipersScripts.Behaviors
 {
     [AddComponentMenu("SnipersScripts/ItemDropDistanceOverride")]
-    public class ItemDropDistanceOverride: MonoBehaviour
+    public class ItemDropDistanceOverride: NetworkBehaviour
     {
+        [Min(0f)]
         [Tooltip("The distance from which items can be dropped.")]
         public float itemDropDistance = ItemDropDistancePatch.VanillaRaycastDistance;
         [Tooltip("If true, the override will be applied on Start. If false, you can call ApplyDropDistanceOverride() manually.")]
@@ -15,7 +17,7 @@ namespace SnipersScripts.Behaviors
         {
             if (applyOverrideOnStart)
             {
-                ApplyDropDistanceOverride(itemDropDistance);
+                ApplyDropDistanceOverrideRpc(itemDropDistance);
             }
         }
 
@@ -23,7 +25,8 @@ namespace SnipersScripts.Behaviors
         /// Sets a custom item drop distance.
         /// </summary>
         /// <param name="distance">The distance from which items can be dropped.</param>
-        public void ApplyDropDistanceOverride(float distance)
+        [Rpc(SendTo.Everyone, RequireOwnership = false)]
+        public void ApplyDropDistanceOverrideRpc(float distance)
         {
             ItemDropDistancePatch.CustomRaycastDistance = distance;
             SnipersScripts.Logger.LogDebug($"Item drop distance override applied: {distance}");

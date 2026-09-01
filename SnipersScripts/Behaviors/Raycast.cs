@@ -9,7 +9,7 @@ namespace SnipersScripts.Behaviors
     {
         [Tooltip("Determins if the raycasts should run on Start or only when manually called")]
         public bool fireRaysOnStart = true;
-        public List<RaycastOptions> raycastOptions;
+        public List<RaycastOptions> raycasts;
 
         void Start()
         {
@@ -17,21 +17,21 @@ namespace SnipersScripts.Behaviors
         }
 
         /// <summary>
-        /// Fires every raycast in the Raycast Options list
+        /// Fires every raycast in the raycasts list
         /// </summary>
         public void FireRays()
         {
-            foreach (var ray in raycastOptions) { FireRay(ray); }
+            foreach (var ray in raycasts) { FireRay(ray); }
         }
         /// <summary>
-        /// Fire a specific raycast based on index in the Raycast Options list
+        /// Fire a specific raycast based on index in the raycasts list
         /// </summary>
         /// <param name="rayIndex">The index of the specific ray to fire</param>
         public void FireRay(int rayIndex) // 
         {
-            if (rayIndex >= 0 && rayIndex < raycastOptions.Count)
+            if (rayIndex >= 0 && rayIndex < raycasts.Count)
             {
-                FireRay(raycastOptions[rayIndex]);
+                FireRay(raycasts[rayIndex]);
             }
             else
             {
@@ -68,6 +68,7 @@ namespace SnipersScripts.Behaviors
     {
         [Tooltip("The direction to fire the raycast")]
         public Vector3 direction;
+        [Min(0f)]
         [Tooltip("How far the ray should travel before failing")]
         public float distance;
         [Tooltip("If true, ray fires in the global rotation. If false, it fires relative to the attached game object's rotation.")]

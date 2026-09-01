@@ -2,7 +2,7 @@
 
 namespace SnipersScripts.Editor
 {
-    [CreateAssetMenu(fileName = "ShipMessage", menuName = "SnipersScripts/ShipMessage")]
+    [CreateAssetMenu(fileName = "ShipMessage", menuName = "SnipersScripts/ShipMessageSO")]
     public class ShipMessageSO : ScriptableObject
     {
         [SerializeField]
