@@ -1,0 +1,9 @@
+{
+	"name":"SnipersScripts",
+	"version_number": "1.0.0",
+	"website_url":"https://github.com/Sniper1-1/SnipersScripts.git",
+	"description":"Various utilities for moon/interior/item makers.",
+	"dependencies":[
+		"BepInEx-BepInExPack-5.4.2305"
+	]
+}
