@@ -5,7 +5,7 @@ namespace SnipersScripts.Behaviors
     [AddComponentMenu("SnipersScripts/AudioClipEvents")]
     public class AudioClipEvents: MonoBehaviour
     {
-        [Tooltip("The AudioSource to use")]
+        [Tooltip("The AudioSource to use. If null, will wait for the duration of the clip silently.")]
         public AudioSource audioSource;
         [Tooltip("Event to run when the AudioClip starts playing")]
         public UnityEngine.Events.UnityEvent onAudioClipStart;
@@ -17,47 +17,46 @@ namespace SnipersScripts.Behaviors
         private Coroutine audioCorutine = null;
 
         /// <summary>
-        /// Plays the clip over an audio source and starts the timer.
+        /// Plays the clip over an audio source (if provided) and starts the timer.
         /// </summary>
         /// <param name="clip">The audio clip to play and wait to end.</param>
         public void PlayAudioClip(AudioClip clip)
         {
-            if (audioSource == null)
+            if (audioSource != null)
             {
-                SnipersScripts.Logger.LogWarning("AudioSource is not assigned.");
-                return;
+                audioSource.clip = clip;
+                audioSource.Play();
             }
-            audioSource.clip = clip;
-            audioSource.Play();
             onAudioClipStart.Invoke();
-            audioCorutine = StartCoroutine(WaitForAudioClipEnd());
+            audioCorutine = StartCoroutine(WaitForAudioClipEnd(clip));
         }
         /// <summary>
         /// Stops the current clip and timer
         /// </summary>
         public void StopAudioClip()
         {
-            if (audioSource == null)
+            if (audioSource != null)
             {
-                SnipersScripts.Logger.LogWarning("AudioSource is not assigned.");
-                return;
+                audioSource.Stop();
             }
             if (audioCorutine != null)
             {
                 StopCoroutine(audioCorutine);
                 audioCorutine = null;
             }
-            audioSource.Stop();
             onAudioClipStop.Invoke();
         }
 
-        private System.Collections.IEnumerator WaitForAudioClipEnd()
+        private System.Collections.IEnumerator WaitForAudioClipEnd(AudioClip clip = null)
         {
-            if (audioSource == null)
+            if (audioSource == null && clip != null)
             {
-                yield break;
+                yield return new WaitForSeconds(clip.length);
             }
-            yield return new WaitUntil(() => !audioSource.isPlaying);
+            else
+            {
+                yield return new WaitUntil(() => !audioSource.isPlaying);
+            }
             onAudioClipEnd.Invoke();
         }
     }

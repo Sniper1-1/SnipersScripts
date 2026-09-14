@@ -7,7 +7,7 @@ A collection of misc scripts for moon/interior/item makers. ([My thread in the L
 ### Components: Can be found under "AddComponent>SnipersScripts"
 
 - **AudioClipEvents**: Invokes events based on the progression of an audio clip.
-  - `AudioSource`: The audio source the clip plays from.
+  - `AudioSource`: The audio source the clip plays from. If ommitted, the script will wait for the duration of the clip without actually playing it audibly.
   - `OnAudioClipStart`: Invokes when clip starts playing.
   - `OnAudioClipEnd`: Invokes when clip finishes.
   - `OnAudioClipStop`: Invokes when the clip is stopped early.
