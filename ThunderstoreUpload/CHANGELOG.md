@@ -1,6 +1,14 @@
 
 ---
 
+**<details><summary>Version 1.1.1</summary>**
+
+ - Fixed typo.
+ 
+ </details>
+ 
+---
+
 **<details><summary>Version 1.1.0</summary>**
 
  - Added two new scripts.
