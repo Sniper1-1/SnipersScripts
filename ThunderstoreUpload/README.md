@@ -48,6 +48,10 @@ A collection of misc scripts for moon/interior/item makers. ([My thread in the L
   - `ApplyOverrideOnStart`: If the override should apply automatically on the GameObject's start using `ItemDropDistance`.
   - `ApplyDropDistanceOverrideRpc(float distance)`: Sets the override distance.
 
+- **LocalPlayerEvent**: A script that allows you to trigger events with the local player. (Intended as a sort of "bridge" script to allow an event in another script that doesn't pass the local player to invoke something that does require the local player as a parameter (for instance, vanilla's `KillLocalPlayer.KillPlayer(PlayerControllerB)`))
+  - `LocalPlayerEvent<PlayerControllerB>`: Invokes an event with the local player as a parameter.
+  - `InvokeLocalPlayerEvent()`: Invokes the `LocalPlayerEvent<PlayerControllerB>` with the local player as a parameter.
+
 - **LoggerScript**: Used to print messages to log.
   - `Log`: A message to log.
   - `LogType`: The channel to log `Log` to. `{Debug, Info, Warning, Error, Fatal}`
@@ -66,8 +70,14 @@ A collection of misc scripts for moon/interior/item makers. ([My thread in the L
   - `OnPlayerSwitchLocation<PlayerControllerB>`: Invokes an event on the player that switched between being outside/inside the ship.
   - `EvaluateIsInShipManualInvoke(PlayerControllerB player)`: Checks if `player` is inside or outside the ship.
 
+- **RandomMaterialSelector**: Used to apply random materials to mesh renderers.
+  - `OnlyUseLevelSeed`: If true, only the level seed is used for the material selection meaning that multiple GameObjects using identical `PossibleMaterials` lists should have the same outcome.
+  - `RenderersShareOutcome`: If every renderer in the `MeshRenderers` list will use the same random outcome or be individually randomized.
+  - `MeshRenderers`: The list of mesh renderers to randomize.
+  - `PossibleMaterials`: A list of potential materials to use, each with a weight for influincing the probability.
+
 - **Raycast**: Fires raycasts from GameObject, invoking events at start and end position as well as if it fails.
-  - `FireRaysOnStart`: if the raycasts should fire on the GameObject's start.
+  - `FireRaysOnStart`: If the raycasts should fire on the GameObject's start.
   - `Raycasts`: List of `RaycastOptions`.
     - `RaycastOptions`: Specific options for a particular raycast.
       - `Direction`: The `{X Y Z}` direction for the raycast to travel.
