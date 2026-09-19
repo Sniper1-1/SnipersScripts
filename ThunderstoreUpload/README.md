@@ -74,7 +74,7 @@ A collection of misc scripts for moon/interior/item makers. ([My thread in the L
   - `OnlyUseLevelSeed`: If true, only the level seed is used for the material selection meaning that multiple GameObjects using identical `PossibleMaterials` lists should have the same outcome.
   - `RenderersShareOutcome`: If every renderer in the `MeshRenderers` list will use the same random outcome or be individually randomized.
   - `MeshRenderers`: The list of mesh renderers to randomize.
-  - `PossibleMaterials`: A list of potential materials to use, each with a weight for influincing the probability.
+  - `PossibleMaterials`: A list of potential materials to use, each with a weight for influencing the probability.
 
 - **Raycast**: Fires raycasts from GameObject, invoking events at start and end position as well as if it fails.
   - `FireRaysOnStart`: If the raycasts should fire on the GameObject's start.
