@@ -8,9 +8,9 @@ A collection of misc scripts for moon/interior/item makers. ([My thread in the L
 
 - **AudioClipEvents**: Invokes events based on the progression of an audio clip.
   - `AudioSource`: The audio source the clip plays from. If ommitted, the script will wait for the duration of the clip without actually playing it audibly.
-  - `OnAudioClipStart`: Invokes when clip starts playing.
-  - `OnAudioClipEnd`: Invokes when clip finishes.
-  - `OnAudioClipStop`: Invokes when the clip is stopped early.
+  - `OnAudioClipStart<>`: Invokes when clip starts playing.
+  - `OnAudioClipEnd<>`: Invokes when clip finishes.
+  - `OnAudioClipStop<>`: Invokes when the clip is stopped early.
   -  `PlayAudioClip(AudioClip clip)`: Plays `clip` on `AudioSource`.
   - `StopAudioClip()`: Stops the currently playing clip.
 
@@ -91,47 +91,47 @@ A collection of misc scripts for moon/interior/item makers. ([My thread in the L
   - `FireRay(int rayIndex)`: fires the `RaycastOptions` at index `rayIndex` in `Raycasts`.
 
 - **RemoteScrapEvents**: Extends the remote scrap item's functionality to invoke an event in addition to toggling the ship lights.
-  - `OnRemoteClick`: The event that invokes when the remote scrap item is clicked.
+  - `OnRemoteClick<>`: The event that invokes when the remote scrap item is clicked.
 
 - **ShipController**: Controls and invokes various events related to the ship.
-  - `OnMagnetEnable`: Invokes when the ship magnet turns on.
-  - `OnMagnetDisable`: Invokes when the ship magnet turns off.
-  - `OnMagnetToggle`: Invokes when the ship magnet is toggled.
-  - `OnShipDescend`: Invokes when the ship starts landing.
-  - `OnShipLand`: Invokes when the ship finishes landing.
-  - `OnShipAscend`: Invokes when the ship starts takeoff.
-  - `OnShipEnterOrbit`: Invokes when the ship returns to orbit.
-  - `OnShipMessageStart`: Invokes when a ship message starts (like the midnight alert).
-  - `OnShipMessageEnd`: Invokes when a ship message ends (like the midnight alert).
-  - `OnSpeakerMute`: Invokes when the ship speaker is muted.
-  - `OnSignalTransmitStart`: Invokes when a message sent over the signal transmitter starts.
-  - `OnSignalTransmitEnd`: Invokes when a message sent over the signal transmitter ends.
-  - `OnHornPull`: Invokes when the ship horn is pulled.
-  - `WhileHornPulled`: Invokes continuously while the ship horn is pulled.
-  - `OnHornRelease`: Invokes when the ship horn is released.
-  - `OnDoorOpen`: Invokes when the ship door opens.
-  - `OnDoorClose`: Invokes when the ship door closes.
-  - `OnDoorToggle`: Invokes when the ship door is toggled.
-  - `OnScreenTurnOn`: Invokes when the radar screen turns on.
-  - `OnScreenTurnOff`: Invokes when the radar screen turns off.
-  - `OnScreenPoweredToggle`: Invokes when the radar screen power is toggled.
-  - `OnScreenSpectatorToggle`: Invokes when the target of the radar screen's spectate is toggled.
-  - `OnTeleportStart`: Invokes when the teleporter sequence starts.
-  - `OnTeleportEnd`: Invokes when the teleporter sequence ends.
-  - `OnInversetStart`: Invokes when the inverse teleporter sequence starts.
-  - `OnInverseEnd`: Invokes when the inverse teleporter sequence ends.
-  - `OnShipLightsTurnOn`: Invokes when the ship lights turn on.
-  - `OnShipLightsTurnOff`: Invokes when the ship lights turn off.
-  - `OnShipLightsToggle`: Invokes when the ship lights toggle.
-  - `OnClampLock`: Invokes when the electric chair clamps are closed.
-  - `OnClampUnlock`: Invokes when the electric chair clamps are opened.
-  - `OnClampToggle`: Invokes when the electric chair clamps are toggled.
-  - `OnShockStart`: Invokes when the electric chair shock starts.
-  - `OnShockEnd`: Invokes when the electric chair shock ends.
-  - `OnTvTurnOn`: Invokes when the tv turns on.
-  - `OnTvTurnOff`: Invokes when the tv turns off.
-  - `OnTvToggle`: Invokes when the tv power toggles.
-  - `OnTvStationChange`: Invokes when the tv switches to playing a new clip.
+  - `OnMagnetEnable<>`: Invokes when the ship magnet turns on.
+  - `OnMagnetDisable<>`: Invokes when the ship magnet turns off.
+  - `OnMagnetToggle<>`: Invokes when the ship magnet is toggled.
+  - `OnShipDescend<>`: Invokes when the ship starts landing.
+  - `OnShipLand<>`: Invokes when the ship finishes landing.
+  - `OnShipAscend<>`: Invokes when the ship starts takeoff.
+  - `OnShipEnterOrbit<>`: Invokes when the ship returns to orbit.
+  - `OnShipMessageStart<>`: Invokes when a ship message starts (like the midnight alert).
+  - `OnShipMessageEnd<>`: Invokes when a ship message ends (like the midnight alert).
+  - `OnSpeakerMute<>`: Invokes when the ship speaker is muted.
+  - `OnSignalTransmitStart<>`: Invokes when a message sent over the signal transmitter starts.
+  - `OnSignalTransmitEnd<>`: Invokes when a message sent over the signal transmitter ends.
+  - `OnHornPull<>`: Invokes when the ship horn is pulled.
+  - `WhileHornPulled<>`: Invokes continuously while the ship horn is pulled.
+  - `OnHornRelease<>`: Invokes when the ship horn is released.
+  - `OnDoorOpen<>`: Invokes when the ship door opens.
+  - `OnDoorClose<>`: Invokes when the ship door closes.
+  - `OnDoorToggle<>`: Invokes when the ship door is toggled.
+  - `OnScreenTurnOn<>`: Invokes when the radar screen turns on.
+  - `OnScreenTurnOff<>`: Invokes when the radar screen turns off.
+  - `OnScreenPoweredToggle<>`: Invokes when the radar screen power is toggled.
+  - `OnScreenSpectatorToggle<>`: Invokes when the target of the radar screen's spectate is toggled.
+  - `OnTeleportStart<>`: Invokes when the teleporter sequence starts.
+  - `OnTeleportEnd<>`: Invokes when the teleporter sequence ends.
+  - `OnInversetStart<>`: Invokes when the inverse teleporter sequence starts.
+  - `OnInverseEnd<>`: Invokes when the inverse teleporter sequence ends.
+  - `OnShipLightsTurnOn<>`: Invokes when the ship lights turn on.
+  - `OnShipLightsTurnOff<>`: Invokes when the ship lights turn off.
+  - `OnShipLightsToggle<>`: Invokes when the ship lights toggle.
+  - `OnClampLock<>`: Invokes when the electric chair clamps are closed.
+  - `OnClampUnlock<>`: Invokes when the electric chair clamps are opened.
+  - `OnClampToggle<>`: Invokes when the electric chair clamps are toggled.
+  - `OnShockStart<>`: Invokes when the electric chair shock starts.
+  - `OnShockEnd<>`: Invokes when the electric chair shock ends.
+  - `OnTvTurnOn<>`: Invokes when the tv turns on.
+  - `OnTvTurnOff<>`: Invokes when the tv turns off.
+  - `OnTvToggle<>`: Invokes when the tv power toggles.
+  - `OnTvStationChange<>`: Invokes when the tv switches to playing a new clip.
   - `PullHorn()`: Activates the ship horn if it exists.
   - `SetChairClamped(bool clamp)`: Closes electric chair clamps if true, or opens them if false. Only if electric chair exists.
   - `SetMagnetPowered(bool powered)`: Turns magnet of if true, off if false. Only if electric chair exists.
@@ -155,21 +155,34 @@ A collection of misc scripts for moon/interior/item makers. ([My thread in the L
   - `ToggleShipScreenSpectator()`: Switches the specate target of the radar screen.
   - `ToggleTv()`: Switches the tv power if it exists.
 
+- **SimpleSellScript**: A barebones script for selling items like at the company building, but without the company monster stuff built in.
+  - `UseCompanyBuyRate`: If true, the script will use the vanilla company buy rate for selling items. If false, it will use `OverrideBuyRate`.
+  - `OverrideBuyRate`: The buy rate to use if `UseCompanyBuyRate` is false. (1 = 100% of the item value, 0.5 = 50% of the item value, etc.)
+  - `MaxItems`: How many items can be placed on the counter at once.
+  - `OnItemPlaced<>`: Invokes when an item is placed on the counter.
+  - `OnSell<>`: Invokes when a sale is complete.
+  - `PlacementCollider`: The interaction collider for placing items.
+  - `RewardsMusic`: The audio source to play the reward music on when a sale is complete.
+  - `RewardGood`: The audio clip to play on `RewardsMusic` when a sale is complete and profit > 1/4 group credits.
+  - `RewardBad`: The audio clip to play on `RewardsMusic` when a sale is complete and profit <= 1/4 group credits.
+  - `PlaceItem(PlayerControllerB playerPlacingItem)`: Places the item the `playerPlacingItem` is holding on the counter if they are holding one and `MaxItems` has not been reached. Invokes `OnItemPlaced`.
+  - `SellItemsRpc()`: Sells all items on the counter, invoking `OnSell` and playing the appropriate reward music.
+
 - **WaitRandomTime**: Waits a random amount of time within a range.
   - `MinWaitTime`: The minimum time it will wait.
   - `MaxWaitTime`: The maximum time it will wait. 
   - `RunOnStart`: If the timer should start automatically on Game Object's Start.
   - `OnlyRandomizeOnce`: If the wait time should only be randomized once or on every invokation.
-  - `OnWaitStart`: Invokes when the timer starts.
-  - `OnWaitComplete`: Invokes when the timer completes.
-  - `OnWaitStop`: Invokes if the timer is cancelled.
+  - `OnWaitStart<>`: Invokes when the timer starts.
+  - `OnWaitComplete<>`: Invokes when the timer completes.
+  - `OnWaitStop<>`: Invokes if the timer is cancelled.
   - `StartWaitRpc()`: Starts the timer.
   - `StopWaitRpc()`: Stops the running timer.
 
 - **WaterloggedSensor**: Invokes events depending on if the GameObject is in water. Must have an `IsTrigger` true collider on the same GameObject.
   - `CheckOnStart`: If the sensor should evaluate its state on the GameObject's start.
-  - `OnSubmerge`: Invokes if sensor is under water.
-  - `OnEmerge`: Invokes if sensor is above water.
+  - `OnSubmerge<>`: Invokes if sensor is under water.
+  - `OnEmerge<>`: Invokes if sensor is above water.
   - `CheckSensorRpc()`: Manually call to check if the sensor is in or out of water, invoking the appropriate event.
 
 ### Scriptable Objects: Can be found under "Assets (or right click in project)>Create>SnipersScripts"
