@@ -1,6 +1,15 @@
 
 ---
 
+**<details><summary>Version 1.2.0</summary>**
+
+ - Added **SimpleSellScript** as a barebones selling script.
+ - Updated readme so events are now listed with `<>` to indicate they are UnityEvents.
+ 
+ </details>
+ 
+---
+
 **<details><summary>Version 1.1.1</summary>**
 
  - Fixed typo.
