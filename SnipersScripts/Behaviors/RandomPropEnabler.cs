@@ -58,7 +58,7 @@ namespace SnipersScripts.Behaviors
 
             foreach (RandomObjectSelectorData container in possibleObjects) // objects default to disabled
             {
-                container.gameOjbect.SetActive(false);
+                container.gameOjbect?.SetActive(false);
             }
 
             for (int i = 0; i < numberOfObjectsToEnable; i++) // copies the list over to a temp one, goes through numberOfObjectsToEnalbe times,
@@ -68,11 +68,9 @@ namespace SnipersScripts.Behaviors
                 {
                     break;
                 }
+
                 RandomObjectSelectorData randomlySelectedObject = WeightedSelector<RandomObjectSelectorData>.SelectWeightedRandom(tempList, random.Next());
-                if (randomlySelectedObject.gameOjbect != null)
-                {
-                    randomlySelectedObject.gameOjbect.SetActive(true);
-                }
+                randomlySelectedObject.gameOjbect?.SetActive(true);
                 tempList.Remove(randomlySelectedObject);
             }
         }
