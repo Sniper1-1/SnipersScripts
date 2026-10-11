@@ -45,11 +45,6 @@ namespace SnipersScripts.Behaviors
                 maximumObjects = temp;
             }
 
-            foreach (RandomObjectSelectorData container in possibleObjects) // objects default to disabled
-            {
-                container.gameOjbect.SetActive(false);
-            }
-
             if (randomizeOnStart)
             {
                 Randomize();
@@ -59,7 +54,12 @@ namespace SnipersScripts.Behaviors
         public void Randomize()
         {
             int numberOfObjectsToEnable = random.Next(minimumObjects, maximumObjects + 1);
-            var tempList = possibleObjects;
+            var tempList = new List<RandomObjectSelectorData>(possibleObjects);
+
+            foreach (RandomObjectSelectorData container in possibleObjects) // objects default to disabled
+            {
+                container.gameOjbect.SetActive(false);
+            }
 
             for (int i = 0; i < numberOfObjectsToEnable; i++) // copies the list over to a temp one, goes through numberOfObjectsToEnalbe times,
                                                               // picks something, and removes from the list so it can't be picked again.
