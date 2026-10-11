@@ -18,14 +18,29 @@ namespace SnipersScripts.Behaviors
         [SerializeField]
         [Tooltip("The weighted list of materials to choose from.")]
         private List<RandomMaterialSelectorData> possibleMaterials = new List<RandomMaterialSelectorData>();
+        [SerializeField]
+        [Tooltip("If true, randomized on start. If false, call Randomize() to randomize.")]
+        private bool randomizeOnStart = true;
+
+        private System.Random random;
+
         public void Start()
         {
             // seed is either just the level seed, or it is the combination of the level seed and the position of this object
             int seed = onlyUseLevelSeed ? RoundManager.Instance.playersManager.randomMapSeed : RoundManager.Instance.playersManager.randomMapSeed+(int)(this.transform.position.x*100)+ (int)(this.transform.position.y*100)+ (int)(this.transform.position.z*100);
 
-            System.Random random = new System.Random(seed);
+            random = new System.Random(seed);
+            
+            if (randomizeOnStart)
+            {
+                Randomize();
+            }
+        }
+
+        public void Randomize()
+        {
             if (renderersShareOutcome)
-            {   
+            {
                 //only randomize once and then apply that to all renderers
                 RandomMaterialSelectorData randomlySelectedMaterials = WeightedSelector<RandomMaterialSelectorData>.SelectWeightedRandom(possibleMaterials, random.Next());
                 foreach (MeshRenderer meshRenderer in meshRenderers)
