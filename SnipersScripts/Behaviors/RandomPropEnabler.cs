@@ -51,6 +51,9 @@ namespace SnipersScripts.Behaviors
             }
         }
 
+        /// <summary>
+        /// Randomizes the enabled game objects.
+        /// </summary>
         public void Randomize()
         {
             int numberOfObjectsToEnable = random.Next(minimumObjects, maximumObjects + 1);

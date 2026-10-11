@@ -43,6 +43,12 @@ A collection of misc scripts for moon/interior/item makers. ([My thread in the L
   - `UnlockIndividualOutside(EntranceTeleport tp)`: Unlocks the outside of the specified `EntranceTeleport`.
   - `SetLockedMessageRpc(string message)`: sets `LockedMessage`to `message`.
 
+- **InteractTriggerInteractableToggle**: Used to adjust an interact trigger's interactable state, hover tip, and disabled hover tip.
+  - `InteractTrigger`: The interact trigger to adjust.
+  - `SetInteractable(bool isInteractable)`: Sets the `InteractTrigger`'s interactable state to `isInteractable`.
+  - `SetHoverTip(string hoverTip)`: Sets the `InteractTrigger`'s hover tip to `hoverTip`.
+  - `SetDisabledHoverTip(string disabledHoverTip)`: Sets the `InteractTrigger`'s disabled hover tip to `disabledHoverTip`.
+
 - **ItemDropDistanceOverride**: Used to increase/decrease how far items can fall.
   - `ItemDropDistance`: How far items can be dropped (default is vanilla distance).
   - `ApplyOverrideOnStart`: If the override should apply automatically on the GameObject's start using `ItemDropDistance`.
@@ -75,6 +81,16 @@ A collection of misc scripts for moon/interior/item makers. ([My thread in the L
   - `RenderersShareOutcome`: If every renderer in the `MeshRenderers` list will use the same random outcome or be individually randomized.
   - `MeshRenderers`: The list of mesh renderers to randomize.
   - `PossibleMaterials`: A list of potential materials to use, each with a weight for influencing the probability.
+  - `RandomizeOnStart`: If the randomization should occur automatically on the GameObject's start.
+  - `Randomize()`: Randomizes the materials on the `MeshRenderers` list from the `PossibleMaterials` list.
+
+- **RandomPropEnabler**: Used to randomly enable scene game objects in a list.
+  - `OnlyUseLevelSeed`: If true, only the level seed is used for the material selection meaning that multiple GameObjects using identical `PossibleObjects` lists should have the same outcome.
+  - `MinimumObjects`: The minimum number of objects to enable from the `PossibleObjects` list.
+  - `MaximumObjects`: The maximum number of objects to enable from the `PossibleObjects` list.
+  - `PossibleObjects`: A list of potential game objects to enable, each with a weight for influencing the probability.
+  - `RandomizeOnStart`: If the randomization should occur automatically on the GameObject's start.
+  - `Randomize()`: Enables between `MinimumObjects` and `MaximumObjects` objects from the `PossibleObjects` list.
 
 - **Raycast**: Fires raycasts from GameObject, invoking events at start and end position as well as if it fails.
   - `FireRaysOnStart`: If the raycasts should fire on the GameObject's start.

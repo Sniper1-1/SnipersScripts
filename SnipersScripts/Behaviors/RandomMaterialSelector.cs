@@ -37,6 +37,9 @@ namespace SnipersScripts.Behaviors
             }
         }
 
+        /// <summary>
+        /// Randomizes the materials.
+        /// </summary>
         public void Randomize()
         {
             if (renderersShareOutcome)

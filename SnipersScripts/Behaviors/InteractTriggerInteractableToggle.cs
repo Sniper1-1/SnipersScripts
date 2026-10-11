@@ -7,6 +7,10 @@ namespace SnipersScripts.Behaviors
     {
         public InteractTrigger interactTrigger;
 
+        /// <summary>
+        /// Sets whether the interact trigger is interactable.
+        /// </summary>
+        /// <param name="isInteractable">true to make the interact trigger interactable; otherwise, false.</param>
         public void SetInteractable(bool isInteractable)
         {
             if (interactTrigger != null)
@@ -19,6 +23,10 @@ namespace SnipersScripts.Behaviors
             }
         }
 
+        /// <summary>
+        /// Sets the hover tip text for the interact trigger when interactable.
+        /// </summary>
+        /// <param name="hoverTip">The text to display as the hover tip.</param>
         public void SetHoverTip(string hoverTip)
         {
             if (interactTrigger != null)
@@ -31,6 +39,10 @@ namespace SnipersScripts.Behaviors
             }
         }
 
+        /// <summary>
+        /// Sets the hover tip text for the interact trigger when not interactable.
+        /// </summary>
+        /// <param name="disabledHoverTip">The text to display as the disabled hover tip.</param>
         public void SetDisabledHoverTip(string disabledHoverTip)
         {
             if (interactTrigger != null)
