@@ -88,8 +88,10 @@ A collection of misc scripts for moon/interior/item makers. ([My thread in the L
   - `OnlyUseLevelSeed`: If true, only the level seed is used for the material selection meaning that multiple GameObjects using identical `PossibleObjects` lists should have the same outcome.
   - `MinimumObjects`: The minimum number of objects to enable from the `PossibleObjects` list.
   - `MaximumObjects`: The maximum number of objects to enable from the `PossibleObjects` list.
+  - `WeightForAllChildren`: adds all child game objects to the `PossibleObjects` list with the specified weight if the `WeightForAllChildren` is > 0. Objects already in `PossibleObjects` will not be added again.
   - `PossibleObjects`: A list of potential game objects to enable, each with a weight for influencing the probability.
   - `RandomizeOnStart`: If the randomization should occur automatically on the GameObject's start.
+  - `AddChildObjects(float weightForAllChildren)`: Adds all child game objects to the `PossibleObjects` list with the specified weight if `weightForAllChildren` is > 0. Objects already in `PossibleObjects` will not be added again.
   - `Randomize()`: Enables between `MinimumObjects` and `MaximumObjects` objects from the `PossibleObjects` list.
 
 - **Raycast**: Fires raycasts from GameObject, invoking events at start and end position as well as if it fails.

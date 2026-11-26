@@ -1,6 +1,14 @@
 
 ---
 
+**<details><summary>Version 1.4.0</summary>**
+
+ - **RandomPropEnabler** script now has option to select child game objects.
+ 
+ </details>
+ 
+---
+
 **<details><summary>Version 1.3.0</summary>**
 
  - Added **InteractTriggerInteractableToggle** script for adjusting an interact trigger's interactable state, hover tip, and disabled hover tip.

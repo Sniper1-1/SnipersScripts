@@ -16,6 +16,10 @@ namespace SnipersScripts.Behaviors
         [Min(0)]
         private int maximumObjects = 1;
         [SerializeField]
+        [Min(0)]
+        [Tooltip("The weight to give all child objects (child objects explicitly listed in possibleObjects will use that weight as an override. If left as 0, child objects will not be added).")]
+        private float weightForAllChildren = 0f;
+        [SerializeField]
         [Tooltip("The weighted list of objects to choose from.")]
         private List<RandomObjectSelectorData> possibleObjects = new List<RandomObjectSelectorData>();
         [SerializeField]
@@ -44,6 +48,8 @@ namespace SnipersScripts.Behaviors
                 minimumObjects = maximumObjects;
                 maximumObjects = temp;
             }
+
+            AddChildObjects(weightForAllChildren);
 
             if (randomizeOnStart)
             {
@@ -77,6 +83,25 @@ namespace SnipersScripts.Behaviors
                 tempList.Remove(randomlySelectedObject);
             }
         }
+
+        /// <summary>
+        /// Adds all child objects of this game object to the possibleObjects list with the specified weight if > 0. If a child object is already in the list, it will not be added again.
+        /// </summary>
+        /// <param name="weightForAllChildren">The weight to assign to all child objects.</param>
+        public void AddChildObjects(float weightForAllChildren)
+        {
+            if (weightForAllChildren > 0)
+            {
+                foreach (Transform child in transform)
+                {
+                    if (!possibleObjects.Exists(x => x.gameOjbect == child.gameObject))
+                    {
+                        possibleObjects.Add(new RandomObjectSelectorData { gameOjbect = child.gameObject, weight = weightForAllChildren });
+                    }
+                }
+            }
+        }
+
 
         [System.Serializable]
         public class RandomObjectSelectorData : IWeighted
